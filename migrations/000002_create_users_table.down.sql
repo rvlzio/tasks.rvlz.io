@@ -1,0 +1,8 @@
+BEGIN;
+
+REVOKE ALL PRIVILEGES ON api.users FROM api;
+REVOKE ALL PRIVILEGES ON SEQUENCE api.users__pk_seq FROM api;
+
+DROP TABLE IF EXISTS api.users;
+
+END;

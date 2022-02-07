@@ -1,0 +1,14 @@
+BEGIN;
+
+CREATE TABLE IF NOT EXISTS api.users (
+    _pk BIGSERIAL PRIMARY KEY,
+    identifier VARCHAR(100) UNIQUE NOT NULL,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL
+);
+
+GRANT SELECT, INSERT ON api.users TO api;
+GRANT USAGE, SELECT ON SEQUENCE api.users__pk_seq TO api;
+
+END;
