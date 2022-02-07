@@ -13,8 +13,17 @@ USER_COUNT_BY_ID_USERNAME_AND_EMAIL = database.PreparedStatement(
     args=3,
 )
 
+USER_COUNT_BY_USERNAME = database.PreparedStatement(
+    name="user_count_by_username",
+    statement="""
+    SELECT COUNT(*) FROM api.users WHERE username = $1;
+    """,
+    args=1,
+)
+
 test_prepared_statements = [
     USER_COUNT_BY_ID_USERNAME_AND_EMAIL,
+    USER_COUNT_BY_USERNAME,
 ]
 
 

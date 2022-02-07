@@ -11,3 +11,8 @@ class ErrorCode:
 class Result:
     success: bool
     error_code: typing.Optional[ErrorCode] = None
+
+
+DUPLICATE_USERNAME_ERR = ErrorCode(
+    description="duplicate_username",
+)
