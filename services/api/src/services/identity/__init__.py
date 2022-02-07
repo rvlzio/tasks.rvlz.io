@@ -62,6 +62,10 @@ class IdentityService(Service):
                     (username,),
                 )
                 row = cursor.fetchone()
+                if row is None:
+                    return results.Result(
+                        success=False, error_code=results.NONEXISTENT_USER_ERR
+                    )
                 password_hash = row[0]
                 is_authenticated = self.hashing_algorithm.verify(
                     password,

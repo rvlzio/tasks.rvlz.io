@@ -24,3 +24,7 @@ DUPLICATE_EMAIL_ERR = ErrorCode(
 INVALID_CREDENTIALS_ERR = ErrorCode(
     description="invalid_credentials",
 )
+
+NONEXISTENT_USER_ERR = ErrorCode(
+    description="nonexisting_user",
+)

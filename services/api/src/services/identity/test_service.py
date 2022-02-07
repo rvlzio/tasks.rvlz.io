@@ -112,3 +112,12 @@ def test_user_authentication_failure(api_conn):
 
     assert result.success is False
     assert result.error_code == results.INVALID_CREDENTIALS_ERR
+
+
+def test_user_authentication_for_missing_user(api_conn):
+    service = IdentityService(conn=api_conn)
+
+    result = service.authenticate_user("user", "password")
+
+    assert result.success is False
+    assert result.error_code == results.NONEXISTENT_USER_ERR
