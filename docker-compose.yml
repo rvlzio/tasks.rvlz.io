@@ -1,6 +1,15 @@
 version: "3.8"
 
 services:
+  api:
+    build:
+      context: ./services/api
+      dockerfile: Dockerfile
+    ports:
+    - 80:80
+    volumes:
+    - ./services/api/src:/src
+
   database:
     build:
       context: ./services/database
@@ -21,7 +30,7 @@ services:
       args:
         TOKEN_STORE_PASSWORD: ${TOKEN_STORE_ADMIN_PASSWORD}
     ports:
-    - 6379:6379
+    - 637
 
 volumes:
   api-data:
