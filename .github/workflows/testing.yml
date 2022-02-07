@@ -1,6 +1,6 @@
 name: Tests
 on: [push]
-envs:
+env:
   # Database
   DATABASE_ADMIN_USERNAME: admin
   DATABASE_ADMIN_PASSWORD: password
