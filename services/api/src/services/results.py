@@ -16,3 +16,7 @@ class Result:
 DUPLICATE_USERNAME_ERR = ErrorCode(
     description="duplicate_username",
 )
+
+DUPLICATE_EMAIL_ERR = ErrorCode(
+    description="duplicate_email",
+)

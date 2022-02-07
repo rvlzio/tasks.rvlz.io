@@ -38,7 +38,11 @@ class IdentityService(Service):
                         (identifier, username, email, password_hash),
                     )
             return identifier, results.Result(success=True)
-        except UniqueViolation:
-            return "", results.Result(
-                success=False, error_code=results.DUPLICATE_USERNAME_ERR
-            )
+        except UniqueViolation as exc:
+            error_code = None
+            exc_message = str(exc)
+            if '"users_username_key"' in exc_message:
+                error_code = results.DUPLICATE_USERNAME_ERR
+            elif '"users_email_key"' in exc_message:
+                error_code = results.DUPLICATE_EMAIL_ERR
+            return "", results.Result(success=False, error_code=error_code)
