@@ -46,3 +46,30 @@ class IdentityService(Service):
             elif '"users_email_key"' in exc_message:
                 error_code = results.DUPLICATE_EMAIL_ERR
             return "", results.Result(success=False, error_code=error_code)
+
+    def authenticate_user(
+        self,
+        username: str,
+        password: str,
+    ) -> results.Result:
+        with self.conn:
+            with self.conn.cursor() as cursor:
+                prepared_statement = self.find_prepared_statement(
+                    "get_password_hash_by_username"
+                )
+                cursor.execute(
+                    prepared_statement.execution_statement(),
+                    (username,),
+                )
+                row = cursor.fetchone()
+                password_hash = row[0]
+                is_authenticated = self.hashing_algorithm.verify(
+                    password,
+                    password_hash,
+                )
+                if is_authenticated:
+                    return results.Result(success=True)
+                return results.Result(
+                    success=False, error_code=results.INVALID_CREDENTIALS_ERR
+                )
+        return results.Result(success=True)

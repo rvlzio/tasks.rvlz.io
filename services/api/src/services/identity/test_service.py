@@ -90,3 +90,25 @@ def test_user_registration_with_taken_email(api_conn, test_conn):
     assert not result.success
     assert result.error_code == results.DUPLICATE_EMAIL_ERR
     assert user_count_by_email(test_conn, "user@gmail.com") == 1
+
+
+def test_user_authentication(api_conn):
+    service = IdentityService(conn=api_conn)
+    username, email, password = "user", "user@gmail.com", "mypassword"
+    service.register_user(username, email, password)
+
+    result = service.authenticate_user(username, password)
+
+    assert result.success is True
+    assert result.error_code is None
+
+
+def test_user_authentication_failure(api_conn):
+    service = IdentityService(conn=api_conn)
+    username, email, password = "user", "user@gmail.com", "mypassword"
+    service.register_user(username, email, password)
+
+    result = service.authenticate_user(username, "other_password")
+
+    assert result.success is False
+    assert result.error_code == results.INVALID_CREDENTIALS_ERR

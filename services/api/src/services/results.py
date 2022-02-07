@@ -20,3 +20,7 @@ DUPLICATE_USERNAME_ERR = ErrorCode(
 DUPLICATE_EMAIL_ERR = ErrorCode(
     description="duplicate_email",
 )
+
+INVALID_CREDENTIALS_ERR = ErrorCode(
+    description="invalid_credentials",
+)
