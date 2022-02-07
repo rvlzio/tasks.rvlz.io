@@ -4,8 +4,8 @@ from services import prepared_statements
 from infrastructure import database
 
 
-USER_COUNT_BY_USERNAME_AND_EMAIL = database.PreparedStatement(
-    name="user_count_by_username_and_email",
+USER_COUNT_BY_ID_USERNAME_AND_EMAIL = database.PreparedStatement(
+    name="user_count_by_id_username_and_email",
     statement="""
     SELECT COUNT(*) FROM api.users
     WHERE identifier = $1 AND username = $2 AND email = $3;
@@ -14,7 +14,7 @@ USER_COUNT_BY_USERNAME_AND_EMAIL = database.PreparedStatement(
 )
 
 test_prepared_statements = [
-    USER_COUNT_BY_USERNAME_AND_EMAIL,
+    USER_COUNT_BY_ID_USERNAME_AND_EMAIL,
 ]
 
 

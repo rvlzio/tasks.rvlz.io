@@ -2,7 +2,7 @@ import typing
 
 from services.identity import IdentityService
 from services.identity.conftest import (
-    USER_COUNT_BY_USERNAME_AND_EMAIL,
+    USER_COUNT_BY_ID_USERNAME_AND_EMAIL,
 )
 
 
@@ -15,7 +15,7 @@ def user_count(
     with conn:
         with conn.cursor() as cursor:
             cursor.execute(
-                USER_COUNT_BY_USERNAME_AND_EMAIL.execution_statement(),
+                USER_COUNT_BY_ID_USERNAME_AND_EMAIL.execution_statement(),
                 (identifier, username, email),
             )
             row = cursor.fetchone()
