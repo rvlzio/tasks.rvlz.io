@@ -1,0 +1,1 @@
+FROM postgres:12.5-alpine
