@@ -5,6 +5,14 @@ services:
     build:
       context: ./services/api
       dockerfile: Dockerfile
+    environment:
+      DATABASE_USERNAME: ${DATABASE_API_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_API_PASSWORD}
+      DATABASE_TEST_USERNAME: ${DATABASE_ADMIN_USERNAME}
+      DATABASE_TEST_PASSWORD: ${DATABASE_ADMIN_PASSWORD}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_TEST_NAME: ${DATABASE_TEST_NAME}
+      DATABASE_HOST: ${DATABASE_HOST}
     ports:
     - 80:80
     volumes:
