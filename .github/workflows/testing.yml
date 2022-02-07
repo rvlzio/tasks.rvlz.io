@@ -1,0 +1,76 @@
+name: Tests
+on: [push]
+envs:
+  # Database
+  DATABASE_ADMIN_USERNAME: admin
+  DATABASE_ADMIN_PASSWORD: password
+  DATABASE_API_USERNAME: api
+  DATABASE_API_PASSWORD: password
+  DATABASE_NAME: api_test
+  DATABASE_HOST: localhost
+  DATABASE_URI: postgresql://admin:password@localhost/api_test?sslmode=disable
+  # CLI
+  CLI_DATABASE_HOST: localhost
+  CLI_DATABASE_NAME: api_test
+  CLI_DATABASE_USERNAME: admin
+  CLI_DATABASE_PASSWORD: password
+jobs:
+  Run-tests:
+    runs-on: ubuntu-latest
+    services:
+      database:
+        image: postgres:12.5-alpine
+        env:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: api_test
+        ports:
+        - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      # Get repo
+      - name: Check out repository
+        uses: actions/checkout@v2
+      # Set up dependencies and environment
+      - name: Set up Go 1.17
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.17
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: Install python virtual environment
+        run: python -m venv venv
+      - name: Activate python virtual environment
+        run: source ./venv/bin/activate
+      - name: Install python dependencies for CLI tool
+        run: pip install -r requirements.txt
+      - name: Install golang-migrate for running database migrations
+        run: >
+          GOBIN=/usr/local/bin/ go install -tags 'postgres'
+          github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+      # Set up database
+      - name: Create database user for API
+        run: python manager.py database create-database-user $DATABASE_API_USERNAME $DATABASE_API_PASSWORD
+      - name: Run database migrations
+        run: migrate -path ./migrations -database $DATABASE_URI up
+      # Build image for tests
+      - name: Build API docker image
+        run: docker build services/api -f services/api/Dockerfile -t app/api
+      # Run tests
+      - name: Run integration and unit tests in API container
+        run: >
+          docker run --rm --network "host"
+          -e DATABASE_USERNAME=$DATABASE_API_USERNAME
+          -e DATABASE_PASSWORD=$DATABASE_API_PASSWORD
+          -e DATABASE_HOST=$DATABASE_HOST
+          -e DATABASE_NAME=$DATABASE_NAME
+          -e DATABASE_TEST_USERNAME=$DATABASE_ADMIN_USERNAME
+          -e DATABASE_TEST_PASSWORD=$DATABASE_ADMIN_PASSWORD
+          -e DATABASE_TEST_NAME=$DATABASE_NAME
+          app/api sh -c 'cd /src && python -m pytest'
