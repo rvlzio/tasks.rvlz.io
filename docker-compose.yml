@@ -14,5 +14,14 @@ services:
     volumes:
     - api-data:/var/lib/postgresql/data
 
+  token_store:
+    build:
+      context: ./services/token_store
+      dockerfile: Dockerfile
+      args:
+        TOKEN_STORE_PASSWORD: ${TOKEN_STORE_ADMIN_PASSWORD}
+    ports:
+    - 6379:6379
+
 volumes:
   api-data:
