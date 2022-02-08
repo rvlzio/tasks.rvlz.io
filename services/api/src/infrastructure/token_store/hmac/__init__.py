@@ -27,3 +27,7 @@ class HMACTokenStore(TokenStore):
         tag = self._generate_hmac_tag(token_id)
         tag = base64.b64encode(tag).decode("ascii")
         return f"{token_id}.{tag}"
+
+    def delete_token(self, token_id: str):
+        token_id, _ = token_id.split(".")
+        self.delegate.delete_token(token_id)

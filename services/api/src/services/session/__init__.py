@@ -18,6 +18,10 @@ class SessionService(Service):
         token_id = self.token_store.create_token(username, expiry)
         return token_id, results.Result(success=True)
 
+    def end_session(self, token: str) -> results.Result:
+        self.token_store.delete_token(token)
+        return results.Result(success=True)
+
 
 def initialize_service(
     conn: typing.Any, secret_key: str, duration: int = 86400

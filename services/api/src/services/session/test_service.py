@@ -29,6 +29,16 @@ def session_in_store(conn: typing.Any, token: str) -> bool:
     return count == 1
 
 
+def session_removed_from_store(conn: typing.Any, token: str) -> bool:
+    token_id = token.split(".")[0]
+    token_id = base64.b64decode(token_id.encode("ascii"))
+    m = hashlib.sha256()
+    m.update(token_id)
+    hashed_token_id = base64.b64encode(m.digest()).decode("ascii")
+    count = conn.exists(f"tk_id:{hashed_token_id}")
+    return count == 0
+
+
 def username_in_stored_session(
     conn: typing.Any,
     token: str,
@@ -56,3 +66,15 @@ def test_session_start(api_conn, test_conn):
     assert hmac_tag_valid(secret_key, token)
     assert session_in_store(test_conn, token)
     assert username_in_stored_session(test_conn, token, "user")
+
+
+def test_session_end(api_conn, test_conn):
+    secret_key = "my_secret"
+    service = initialize_service(conn=api_conn, secret_key=secret_key)
+    token, _ = service.start_session("user")
+
+    result = service.end_session(token)
+
+    assert result.success
+    assert result.error_code is None
+    assert session_removed_from_store(test_conn, token)

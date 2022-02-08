@@ -36,3 +36,8 @@ class RedisTokenStore(token_store.TokenStore):
         }
         self.conn.hset(f"tk_id:{hashed_token_id}", mapping=mapping)
         return token_id
+
+    def delete_token(self, token_id: str):
+        hashed_token_id = self._hash(token_id)
+        key = f"tk_id:{hashed_token_id}"
+        self.conn.delete(key)

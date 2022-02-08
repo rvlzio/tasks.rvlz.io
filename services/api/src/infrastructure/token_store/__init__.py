@@ -30,6 +30,10 @@ class TokenStore(ABC):
     ) -> str:
         pass
 
+    @abstractmethod
+    def delete_token(self, token_id: str):
+        pass
+
 
 def generate_api_connection(test: bool = False) -> typing.Any:
     username = os.environ.get("TOKEN_STORE_USER")
