@@ -9,6 +9,13 @@ env:
   DATABASE_NAME: api_test
   DATABASE_HOST: localhost
   DATABASE_URI: postgresql://admin:password@localhost/api_test?sslmode=disable
+  # Token store
+  TOKEN_STORE_ADMIN_USERNAME: default
+  TOKEN_STORE_ADMIN_PASSWORD: password
+  TOKEN_STORE_API_USERNAME: api
+  TOKEN_STORE_API_PASSWORD: password
+  TOKEN_STORE_NAME: 1
+  TOKEN_STORE_HOST: localhost
   # CLI
   CLI_DATABASE_HOST: localhost
   CLI_DATABASE_NAME: api_test
@@ -31,6 +38,15 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+      token_store:
+        image: redis:6.2.6-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+        - 6379:6379
     steps:
       # Get repo
       - name: Check out repository
@@ -59,6 +75,9 @@ jobs:
         run: python manager.py database create-database-user $DATABASE_API_USERNAME $DATABASE_API_PASSWORD
       - name: Run database migrations
         run: migrate -path ./migrations -database $DATABASE_URI up
+      # Set up token store
+      - name: Create token store user for API
+        run: python manager.py token-store create-user $TOKEN_STORE_API_USERNAME $TOKEN_STORE_API_PASSWORD
       # Build image for tests
       - name: Build API docker image
         run: docker build services/api -f services/api/Dockerfile -t app/api
@@ -73,4 +92,11 @@ jobs:
           -e DATABASE_TEST_USERNAME=$DATABASE_ADMIN_USERNAME
           -e DATABASE_TEST_PASSWORD=$DATABASE_ADMIN_PASSWORD
           -e DATABASE_TEST_NAME=$DATABASE_NAME
+          -e TOKEN_STORE_USERNAME=$TOKEN_STORE_API_USERNAME
+          -e TOKEN_STORE_PASSWORD=$TOKEN_STORE_API_PASSWORD
+          -e TOKEN_STORE_HOST=$TOKEN_STORE_HOST
+          -e TOKEN_STORE_NAME=$TOKEN_STORE_NAME
+          -e TOKEN_STORE_TEST_USERNAME=$TOKEN_STORE_ADMIN_USERNAME
+          -e TOKEN_STORE_TEST_PASSWORD=$TOKEN_STORE_ADMIN_PASSWORD
+          -e TOKEN_STORE_TEST_NAME=$TOKEN_STORE_NAME
           app/api sh -c 'cd /src && python -m pytest'
