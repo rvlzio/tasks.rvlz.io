@@ -36,7 +36,7 @@ class TokenStore(ABC):
 
 
 def generate_api_connection(test: bool = False) -> typing.Any:
-    username = os.environ.get("TOKEN_STORE_USER")
+    username = os.environ.get("TOKEN_STORE_USERNAME")
     password = os.environ.get("TOKEN_STORE_PASSWORD")
     host = os.environ.get("TOKEN_STORE_HOST")
     db = os.environ.get("TOKEN_STORE_NAME")
@@ -54,7 +54,7 @@ def generate_api_connection(test: bool = False) -> typing.Any:
 
 
 def generate_test_connection() -> typing.Any:
-    username = os.environ.get("TOKEN_STORE_TEST_USER")
+    username = os.environ.get("TOKEN_STORE_TEST_USERNAME")
     password = os.environ.get("TOKEN_STORE_TEST_PASSWORD")
     host = os.environ.get("TOKEN_STORE_HOST")
     db = os.environ.get("TOKEN_STORE_TEST_NAME")
