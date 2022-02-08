@@ -112,3 +112,21 @@ def test_invalid_base64_tag_cannot_end_session(api_conn, test_conn, bad_token):
 
     assert not result.success
     assert result.error_code == results.BAD_BASE64_ENCODING_ERR
+
+
+@pytest.mark.parametrize(
+    "bad_token",
+    [
+        "token_identifier==hmac_tag==",
+        "token_identifier==.",
+        ".hmac_tag==",
+    ],
+)
+def test_malformed_token_cannot_end_session(api_conn, test_conn, bad_token):
+    secret_key = "my_secret"
+    service = initialize_service(conn=api_conn, secret_key=secret_key)
+
+    result = service.end_session(bad_token)
+
+    assert not result.success
+    assert result.error_code == results.MALFORMED_SESSION_TOKEN_ERR

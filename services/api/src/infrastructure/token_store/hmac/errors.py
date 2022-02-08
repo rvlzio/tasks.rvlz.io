@@ -4,3 +4,7 @@ class InvalidHMACTag(Exception):
 
 class BadBase64Encoding(Exception):
     pass
+
+
+class MalformedSessionToken(Exception):
+    pass

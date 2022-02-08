@@ -9,6 +9,7 @@ from infrastructure.token_store.hmac import HMACTokenStore
 from infrastructure.token_store.hmac.errors import (
     InvalidHMACTag,
     BadBase64Encoding,
+    MalformedSessionToken,
 )
 
 
@@ -32,6 +33,10 @@ class SessionService(Service):
         except BadBase64Encoding:
             return results.Result(
                 success=False, error_code=results.BAD_BASE64_ENCODING_ERR
+            )
+        except MalformedSessionToken:
+            return results.Result(
+                success=False, error_code=results.MALFORMED_SESSION_TOKEN_ERR
             )
         return results.Result(success=True)
 

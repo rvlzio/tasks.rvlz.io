@@ -36,3 +36,7 @@ INVALID_HMAC_TAG_ERR = ErrorCode(
 BAD_BASE64_ENCODING_ERR = ErrorCode(
     description="bad_base64_encoding",
 )
+
+MALFORMED_SESSION_TOKEN_ERR = ErrorCode(
+    description="malformed_session_token",
+)
