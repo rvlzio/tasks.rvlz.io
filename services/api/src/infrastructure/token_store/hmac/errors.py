@@ -1,0 +1,2 @@
+class InvalidHMACTag(Exception):
+    pass

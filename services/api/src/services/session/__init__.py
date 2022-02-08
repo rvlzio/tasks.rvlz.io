@@ -6,6 +6,7 @@ from services import Service
 from infrastructure.token_store import TokenStore
 from infrastructure.token_store.redis import RedisTokenStore
 from infrastructure.token_store.hmac import HMACTokenStore
+from infrastructure.token_store.hmac.errors import InvalidHMACTag
 
 
 class SessionService(Service):
@@ -19,7 +20,12 @@ class SessionService(Service):
         return token_id, results.Result(success=True)
 
     def end_session(self, token: str) -> results.Result:
-        self.token_store.delete_token(token)
+        try:
+            self.token_store.delete_token(token)
+        except InvalidHMACTag:
+            return results.Result(
+                success=False, error_code=results.INVALID_HMAC_TAG_ERR
+            )
         return results.Result(success=True)
 
 

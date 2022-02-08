@@ -28,3 +28,7 @@ INVALID_CREDENTIALS_ERR = ErrorCode(
 NONEXISTENT_USER_ERR = ErrorCode(
     description="nonexisting_user",
 )
+
+INVALID_HMAC_TAG_ERR = ErrorCode(
+    description="invalid_hmac_tag",
+)
