@@ -13,6 +13,13 @@ class HMACTokenStore(TokenStore):
         self.key = key
         self.delegate = delegate
 
+    def _is_valid_base64(self, s: str) -> bool:
+        try:
+            base64.b64decode(s.encode("ascii"))
+            return True
+        except Exception:
+            return False
+
     def _is_valid_hmac_tag(self, message: str, tag: str) -> bool:
         message = base64.b64decode(message.encode("ascii"))
         tag = base64.b64decode(tag.encode("ascii"))
@@ -38,6 +45,10 @@ class HMACTokenStore(TokenStore):
 
     def delete_token(self, token_id: str):
         token_id, tag = token_id.split(".")
+        if not self._is_valid_base64(token_id) or not self._is_valid_base64(
+            tag
+        ):
+            raise errors.BadBase64Encoding()
         if not self._is_valid_hmac_tag(token_id, tag):
             raise errors.InvalidHMACTag()
         self.delegate.delete_token(token_id)

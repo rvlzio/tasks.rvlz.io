@@ -3,6 +3,8 @@ import base64
 import hashlib
 import hmac
 
+import pytest
+
 from services.session import initialize_service
 from services import results
 
@@ -92,3 +94,21 @@ def test_invalid_hmac_tag_cannot_end_session(api_conn, test_conn):
     assert not result.success
     assert result.error_code == results.INVALID_HMAC_TAG_ERR
     assert session_in_store(test_conn, token)
+
+
+@pytest.mark.parametrize(
+    "bad_token",
+    [
+        "你好世界.hmac_tag==",
+        "token_identifier==.你好世界",
+        "你好世界.你好世界",
+    ],
+)
+def test_invalid_base64_tag_cannot_end_session(api_conn, test_conn, bad_token):
+    secret_key = "my_secret"
+    service = initialize_service(conn=api_conn, secret_key=secret_key)
+
+    result = service.end_session(bad_token)
+
+    assert not result.success
+    assert result.error_code == results.BAD_BASE64_ENCODING_ERR

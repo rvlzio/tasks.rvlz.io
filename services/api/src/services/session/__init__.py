@@ -6,7 +6,10 @@ from services import Service
 from infrastructure.token_store import TokenStore
 from infrastructure.token_store.redis import RedisTokenStore
 from infrastructure.token_store.hmac import HMACTokenStore
-from infrastructure.token_store.hmac.errors import InvalidHMACTag
+from infrastructure.token_store.hmac.errors import (
+    InvalidHMACTag,
+    BadBase64Encoding,
+)
 
 
 class SessionService(Service):
@@ -25,6 +28,10 @@ class SessionService(Service):
         except InvalidHMACTag:
             return results.Result(
                 success=False, error_code=results.INVALID_HMAC_TAG_ERR
+            )
+        except BadBase64Encoding:
+            return results.Result(
+                success=False, error_code=results.BAD_BASE64_ENCODING_ERR
             )
         return results.Result(success=True)
 

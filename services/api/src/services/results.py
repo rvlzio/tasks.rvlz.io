@@ -32,3 +32,7 @@ NONEXISTENT_USER_ERR = ErrorCode(
 INVALID_HMAC_TAG_ERR = ErrorCode(
     description="invalid_hmac_tag",
 )
+
+BAD_BASE64_ENCODING_ERR = ErrorCode(
+    description="bad_base64_encoding",
+)
