@@ -18,9 +18,7 @@ class HMACTokenStore(TokenStore):
         tag = base64.b64decode(tag.encode("ascii"))
         key = self.key.encode("ascii")
         message_tag = hmac.new(key, message, digestmod=hashlib.sha256).digest()
-        r = hmac.compare_digest(tag, message_tag)
-        print(r)
-        return r
+        return hmac.compare_digest(tag, message_tag)
 
     def _generate_hmac_tag(self, token_id: str) -> bytes:
         key = self.key.encode("ascii")
