@@ -2,7 +2,7 @@ import pytest
 
 from services.session import initialize_service
 from views.session import initialize_view
-from views import results
+from application import results
 
 
 def test_session_username(api_conn, test_conn):

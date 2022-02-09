@@ -8,7 +8,7 @@ from infrastructure.token_store.hmac.errors import (
     MalformedSessionToken,
 )
 from infrastructure.token_store import TokenStore
-from views import results
+from application import results
 from views import View
 
 

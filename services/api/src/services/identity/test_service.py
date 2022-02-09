@@ -6,7 +6,7 @@ from services.identity.conftest import (
     USER_COUNT_BY_USERNAME,
     USER_COUNT_BY_EMAIL,
 )
-from services import results
+from application import results
 
 
 def user_count(

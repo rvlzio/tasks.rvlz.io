@@ -6,7 +6,7 @@ import hmac
 import pytest
 
 from services.session import initialize_service
-from services import results
+from application import results
 
 
 def hmac_tag_valid(secret_key: str, token: str) -> bool:

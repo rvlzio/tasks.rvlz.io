@@ -1,7 +1,7 @@
 import typing
 from datetime import datetime, timedelta
 
-from services import results
+from application import results
 from services import Service
 from infrastructure.token_store import TokenStore
 from infrastructure.token_store.redis import RedisTokenStore

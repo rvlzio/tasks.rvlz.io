@@ -1,7 +1,7 @@
 from typing import Optional, Dict, Tuple, Any
 
 from views import View
-from views import results
+from application import results
 from infrastructure.database.prepared_statements import sql
 
 

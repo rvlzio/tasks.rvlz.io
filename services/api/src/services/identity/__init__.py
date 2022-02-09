@@ -5,7 +5,7 @@ from psycopg2.errors import UniqueViolation
 from services.identity.security import HashingAlgorithm
 from services.identity.security.scrypt import Scrypt
 from services import Service
-from services import results
+from application import results
 from infrastructure.database.prepared_statements import sql
 
 
