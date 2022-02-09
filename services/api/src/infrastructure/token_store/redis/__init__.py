@@ -43,6 +43,8 @@ class RedisTokenStore(token_store.TokenStore):
             f"tk_id:{hashed_token_id}",
             keys=["username"],
         )
+        if all([field is None for field in data]):
+            return None
         username = data[0]
         return token_store.Token(identifier=token_id, username=username)
 

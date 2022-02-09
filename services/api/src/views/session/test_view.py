@@ -72,3 +72,17 @@ def test_session_username_with_malformed_tag(api_conn, test_conn, bad_token):
     assert not result.success
     assert result.error_code == results.MALFORMED_SESSION_TOKEN_ERR
     assert username == ""
+
+
+def test_username_of_nonexisting_session(api_conn, test_conn):
+    secret_key = "secret_key"
+    service = initialize_service(conn=test_conn, secret_key=secret_key)
+    token, _ = service.start_session("user")
+    service.end_session(token)
+    view = initialize_view(conn=api_conn, secret_key=secret_key)
+
+    username, result = view.session_username(token)
+
+    assert not result.success
+    assert result.error_code == results.MISSING_SESSION_ERR
+    assert username == ""

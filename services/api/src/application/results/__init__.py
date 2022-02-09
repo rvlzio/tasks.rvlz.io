@@ -40,3 +40,7 @@ BAD_BASE64_ENCODING_ERR = ErrorCode(
 MALFORMED_SESSION_TOKEN_ERR = ErrorCode(
     description="malformed_session_token",
 )
+
+MISSING_SESSION_ERR = ErrorCode(
+    description="missing_session",
+)

@@ -18,7 +18,12 @@ class SessionView(View):
 
     def session_username(self, token: str) -> typing.Tuple[str, results.Result]:
         try:
-            tk = self.token_store.read_token(token)
+            token = self.token_store.read_token(token)
+            if token is None:
+                return "", results.Result(
+                    success=False, error_code=results.MISSING_SESSION_ERR
+                )
+            return token.username, results.Result(success=True)
         except InvalidHMACTag:
             return "", results.Result(
                 success=False, error_code=results.INVALID_HMAC_TAG_ERR
@@ -31,7 +36,6 @@ class SessionView(View):
             return "", results.Result(
                 success=False, error_code=results.MALFORMED_SESSION_TOKEN_ERR
             )
-        return tk.username, results.Result(success=True)
 
 
 def initialize_view(
