@@ -77,3 +77,7 @@ class IdentityService(Service):
                     success=False, error_code=results.INVALID_CREDENTIALS_ERR
                 )
         return results.Result(success=True)
+
+
+def initialize_service(conn: typing.Any) -> IdentityService:
+    return IdentityService(conn=conn)
