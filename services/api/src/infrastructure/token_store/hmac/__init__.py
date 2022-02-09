@@ -62,7 +62,9 @@ class HMACTokenStore(TokenStore):
         return f"{token_id}.{tag}"
 
     def read_token(self, token_id: str) -> typing.Optional[Token]:
-        unsigned_token_id, _ = token_id.split(".")
+        unsigned_token_id, tag = token_id.split(".")
+        if not self._is_valid_hmac_tag(unsigned_token_id, tag):
+            raise errors.InvalidHMACTag()
         token = self.delegate.read_token(unsigned_token_id)
         return token
 
