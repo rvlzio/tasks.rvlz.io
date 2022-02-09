@@ -51,3 +51,24 @@ def test_session_username_with_bad_base64_tag(api_conn, test_conn, bad_token):
     assert not result.success
     assert result.error_code == results.BAD_BASE64_ENCODING_ERR
     assert username == ""
+
+
+@pytest.mark.parametrize(
+    "bad_token",
+    [
+        "token_identifier==hmac_tag==",
+        "token_identifier==.",
+        ".hmac_tag==",
+    ],
+)
+def test_session_username_with_malformed_tag(api_conn, test_conn, bad_token):
+    secret_key = "my_secret"
+    service = initialize_service(conn=test_conn, secret_key=secret_key)
+    token, _ = service.start_session("user")
+    view = initialize_view(conn=api_conn, secret_key=secret_key)
+
+    username, result = view.session_username(bad_token)
+
+    assert not result.success
+    assert result.error_code == results.MALFORMED_SESSION_TOKEN_ERR
+    assert username == ""

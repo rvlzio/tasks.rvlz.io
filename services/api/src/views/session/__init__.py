@@ -5,6 +5,7 @@ from infrastructure.token_store.hmac import HMACTokenStore
 from infrastructure.token_store.hmac.errors import (
     InvalidHMACTag,
     BadBase64Encoding,
+    MalformedSessionToken,
 )
 from infrastructure.token_store import TokenStore
 from views import results
@@ -25,6 +26,10 @@ class SessionView(View):
         except BadBase64Encoding:
             return "", results.Result(
                 success=False, error_code=results.BAD_BASE64_ENCODING_ERR
+            )
+        except MalformedSessionToken:
+            return "", results.Result(
+                success=False, error_code=results.MALFORMED_SESSION_TOKEN_ERR
             )
         return tk.username, results.Result(success=True)
 
