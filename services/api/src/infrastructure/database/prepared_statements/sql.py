@@ -1,6 +1,6 @@
 import typing
 
-from infrastructure.database import PreparedStatement
+from infrastructure.database.prepared_statements import PreparedStatement
 
 
 prepared_statements = [
@@ -16,6 +16,13 @@ prepared_statements = [
         name="get_password_hash_by_username",
         statement="""
         SELECT password_hash FROM api.users WHERE username = $1 LIMIT 1;
+        """,
+        args=1,
+    ),
+    PreparedStatement(
+        name="get_user_profile_by_id",
+        statement="""
+        SELECT username, email FROM api.users WHERE identifier = $1;
         """,
         args=1,
     ),

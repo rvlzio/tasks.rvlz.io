@@ -1,10 +1,14 @@
 import pytest
 
-from services import prepared_statements
 from infrastructure import database
+from infrastructure.database.prepared_statements import (
+    PreparedStatement,
+    run_prepared_statements,
+)
+from infrastructure.database.prepared_statements import sql
 
 
-USER_COUNT_BY_ID_USERNAME_AND_EMAIL = database.PreparedStatement(
+USER_COUNT_BY_ID_USERNAME_AND_EMAIL = PreparedStatement(
     name="user_count_by_id_username_and_email",
     statement="""
     SELECT COUNT(*) FROM api.users
@@ -13,7 +17,7 @@ USER_COUNT_BY_ID_USERNAME_AND_EMAIL = database.PreparedStatement(
     args=3,
 )
 
-USER_COUNT_BY_USERNAME = database.PreparedStatement(
+USER_COUNT_BY_USERNAME = PreparedStatement(
     name="user_count_by_username",
     statement="""
     SELECT COUNT(*) FROM api.users WHERE username = $1;
@@ -21,7 +25,7 @@ USER_COUNT_BY_USERNAME = database.PreparedStatement(
     args=1,
 )
 
-USER_COUNT_BY_EMAIL = database.PreparedStatement(
+USER_COUNT_BY_EMAIL = PreparedStatement(
     name="user_count_by_email",
     statement="""
     SELECT COUNT(*) FROM api.users WHERE email = $1;
@@ -39,7 +43,7 @@ test_prepared_statements = [
 @pytest.fixture(scope="module")
 def raw_test_conn():
     conn = database.generate_test_connection()
-    database.run_prepared_statements(
+    run_prepared_statements(
         conn,
         test_prepared_statements,
     )
@@ -50,7 +54,7 @@ def raw_test_conn():
 @pytest.fixture(scope="module")
 def raw_api_conn():
     conn = database.generate_api_connection(test=True)
-    database.run_prepared_statements(conn, prepared_statements.export())
+    run_prepared_statements(conn, sql.export())
     yield conn
     conn.close()
 

@@ -2,13 +2,13 @@ from typing import Optional, Dict, Tuple, Any
 
 from views import View
 from views import results
-from views import prepared_statements
+from infrastructure.database.prepared_statements import sql
 
 
 class IdentityView(View):
     def __init__(self, conn: Any):
         self.conn = conn
-        self.prepared_statements = prepared_statements.export()
+        self.prepared_statements = sql.export()
 
     def user_profile(
         self,

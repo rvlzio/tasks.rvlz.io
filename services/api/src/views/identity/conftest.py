@@ -1,8 +1,12 @@
 import pytest
 
-from services import prepared_statements as services_ps
-from views import prepared_statements as views_ps
 from infrastructure import database
+from infrastructure.database.prepared_statements import (
+    PreparedStatement,
+    run_prepared_statements,
+)
+from infrastructure.database.prepared_statements import sql
+
 
 test_prepared_statements = []
 
@@ -10,7 +14,7 @@ test_prepared_statements = []
 @pytest.fixture(scope="module")
 def raw_test_conn():
     conn = database.generate_test_connection()
-    database.run_prepared_statements(
+    run_prepared_statements(
         conn,
         test_prepared_statements,
     )
@@ -21,9 +25,7 @@ def raw_test_conn():
 @pytest.fixture(scope="module")
 def raw_api_conn():
     conn = database.generate_api_connection(test=True)
-    database.run_prepared_statements(
-        conn, services_ps.export() + views_ps.export()
-    )
+    run_prepared_statements(conn, sql.export())
     yield conn
     conn.close()
 
