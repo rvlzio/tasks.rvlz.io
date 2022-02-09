@@ -1,5 +1,6 @@
 from services.identity import initialize_service
 from views.identity import initialize_view
+from application import results
 
 
 def test_user_profile(api_conn):
@@ -14,3 +15,13 @@ def test_user_profile(api_conn):
     assert len(profile) == 2
     assert profile["username"] == "user"
     assert profile["email"] == "user@gmail.com"
+
+
+def test_missing_user_registration(api_conn):
+    view = initialize_view(conn=api_conn)
+
+    profile, result = view.user_profile("some_user_id")
+
+    assert not result.success
+    assert result.error_code == results.NONEXISTENT_USER_ERR
+    assert profile is None
