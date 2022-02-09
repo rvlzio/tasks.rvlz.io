@@ -11,13 +11,9 @@ class Token:
         self,
         identifier: str,
         username: str,
-        expiry: datetime,
-        attributes: typing.Dict[str, str] = {},
     ):
         self.identifier = identifier
         self.username = username
-        self.expiry = expiry
-        self.attributes = attributes
 
 
 class TokenStore(ABC):
@@ -32,6 +28,10 @@ class TokenStore(ABC):
 
     @abstractmethod
     def delete_token(self, token_id: str):
+        pass
+
+    @abstractmethod
+    def read_token(self, token_id: str) -> typing.Optional[Token]:
         pass
 
 

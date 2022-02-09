@@ -37,6 +37,15 @@ class RedisTokenStore(token_store.TokenStore):
         self.conn.hset(f"tk_id:{hashed_token_id}", mapping=mapping)
         return token_id
 
+    def read_token(self, token_id: str) -> typing.Optional[token_store.Token]:
+        hashed_token_id = self._hash(token_id)
+        data = self.conn.hmget(
+            f"tk_id:{hashed_token_id}",
+            keys=["username"],
+        )
+        username = data[0]
+        return token_store.Token(identifier=token_id, username=username)
+
     def delete_token(self, token_id: str):
         hashed_token_id = self._hash(token_id)
         key = f"tk_id:{hashed_token_id}"

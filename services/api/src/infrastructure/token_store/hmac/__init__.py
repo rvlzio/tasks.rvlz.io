@@ -61,6 +61,11 @@ class HMACTokenStore(TokenStore):
         tag = base64.b64encode(tag).decode("ascii")
         return f"{token_id}.{tag}"
 
+    def read_token(self, token: str) -> typing.Optional[Token]:
+        token_id, _ = token.split(".")
+        tk = self.delegate.read_token(token_id)
+        return tk
+
     def delete_token(self, token: str):
         token_id = self._extract_token_id(token)
         self.delegate.delete_token(token_id)
