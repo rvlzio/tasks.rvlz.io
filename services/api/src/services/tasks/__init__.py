@@ -8,18 +8,18 @@ class TaskService(Service):
     def __init__(
         self,
         conn: typing.Any,
-        subject_length: int,
+        subject_limit: int,
         description_limit: int,
     ):
         self.conn = conn
-        self.subject_length = subject_length
+        self.subject_limit = subject_limit
         self.description_limit = description_limit
         super().__init__()
 
     def create(
         self, subject: str, description: str
     ) -> typing.Tuple[str, results.Result]:
-        if len(subject) > self.subject_length:
+        if len(subject) > self.subject_limit:
             return "", results.Result(
                 success=False, error_code=results.TASK_SUBJECT_TOO_LONG
             )
@@ -40,11 +40,11 @@ class TaskService(Service):
 
 def initialize_service(
     conn: typing.Any,
-    subject_length: int = 100,
+    subject_limit: int = 100,
     description_limit: int = 1000,
 ) -> TaskService:
     return TaskService(
         conn=conn,
-        subject_length=subject_length,
+        subject_limit=subject_limit,
         description_limit=description_limit,
     )

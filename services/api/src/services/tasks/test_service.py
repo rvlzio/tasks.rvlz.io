@@ -62,7 +62,7 @@ def test_task_creation(api_conn, test_conn):
 
 
 def test_task_subject_limit(api_conn, test_conn):
-    service = initialize_service(conn=api_conn, subject_length=10)
+    service = initialize_service(conn=api_conn, subject_limit=10)
 
     task_id, result = service.create(
         subject="New Phone bill", description="ask for extension"
