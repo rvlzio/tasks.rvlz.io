@@ -2,13 +2,12 @@ import typing
 
 from services import Service
 from application import results
-from infrastructure.database.prepared_statements import sql
 
 
 class TaskService(Service):
     def __init__(self, conn: typing.Any):
         self.conn = conn
-        self.prepared_statements = sql.export()
+        super().__init__()
 
     def create(
         self, subject: str, description: str

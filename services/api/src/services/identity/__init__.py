@@ -6,7 +6,6 @@ from services.identity.security import HashingAlgorithm
 from services.identity.security.scrypt import Scrypt
 from services import Service
 from application import results
-from infrastructure.database.prepared_statements import sql
 
 
 class IdentityService(Service):
@@ -17,7 +16,7 @@ class IdentityService(Service):
     ):
         self.conn = conn
         self.hashing_algorithm = hashing_algorithm
-        self.prepared_statements = sql.export()
+        super().__init__()
 
     def register_user(
         self,
