@@ -48,3 +48,7 @@ MISSING_SESSION_ERR = ErrorCode(
 TASK_SUBJECT_TOO_LONG = ErrorCode(
     description="task_subject_too_long",
 )
+
+TASK_DESCRIPTION_TOO_LONG = ErrorCode(
+    description="task_description_too_long",
+)

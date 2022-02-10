@@ -72,3 +72,16 @@ def test_task_subject_limit(api_conn, test_conn):
     assert result.error_code == results.TASK_SUBJECT_TOO_LONG
     assert task_id == ""
     assert not task_exists(test_conn, task_id)
+
+
+def test_task_description_limit(api_conn, test_conn):
+    service = initialize_service(conn=api_conn, description_limit=10)
+
+    task_id, result = service.create(
+        subject="New Phone bill", description="ask for extension"
+    )
+
+    assert not result.success
+    assert result.error_code == results.TASK_DESCRIPTION_TOO_LONG
+    assert task_id == ""
+    assert not task_exists(test_conn, task_id)
