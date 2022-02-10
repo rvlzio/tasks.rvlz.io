@@ -5,6 +5,7 @@ from services.tasks.conftest import (
     GET_TASK_COUNT_BY_ID,
     GET_TASK_BY_ID,
 )
+from application import results
 
 
 def task_exists(conn: typing.Any, task_id: str) -> bool:
@@ -58,3 +59,16 @@ def test_task_creation(api_conn, test_conn):
         description="ask for extension",
         completed=False,
     )
+
+
+def test_task_subject_limit(api_conn, test_conn):
+    service = initialize_service(conn=api_conn, subject_length=10)
+
+    task_id, result = service.create(
+        subject="New Phone bill", description="ask for extension"
+    )
+
+    assert not result.success
+    assert result.error_code == results.TASK_SUBJECT_TOO_LONG
+    assert task_id == ""
+    assert not task_exists(test_conn, task_id)

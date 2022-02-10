@@ -44,3 +44,7 @@ MALFORMED_SESSION_TOKEN_ERR = ErrorCode(
 MISSING_SESSION_ERR = ErrorCode(
     description="missing_session",
 )
+
+TASK_SUBJECT_TOO_LONG = ErrorCode(
+    description="task_subject_too_long",
+)
