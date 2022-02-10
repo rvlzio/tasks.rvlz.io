@@ -26,6 +26,14 @@ prepared_statements = [
         """,
         args=1,
     ),
+    PreparedStatement(
+        name="add_task",
+        statement="""
+        INSERT INTO api.tasks (identifier, subject, description, completed)
+        VALUES ($1, $2, $3, FALSE);
+        """,
+        args=3,
+    ),
 ]
 
 
