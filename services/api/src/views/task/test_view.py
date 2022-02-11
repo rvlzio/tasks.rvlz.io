@@ -1,6 +1,8 @@
 from views.task import initialize_view
 from services.task import initialize_service
 
+from application import results
+
 
 def test_current_task(api_conn, test_conn):
     view = initialize_view(conn=api_conn)
@@ -18,3 +20,13 @@ def test_current_task(api_conn, test_conn):
         "description": "Ask for extension",
         "completed": False,
     }
+
+
+def test_missing_current_task(api_conn, test_conn):
+    view = initialize_view(conn=api_conn)
+
+    task, result = view.current("some_task_id")
+
+    assert not result.success
+    assert result.error_code == results.NONEXISTENT_TASK_ERR
+    assert task is None

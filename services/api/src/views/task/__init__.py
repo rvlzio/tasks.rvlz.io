@@ -20,6 +20,11 @@ class TaskView(View):
                     (task_id,),
                 )
                 row = cursor.fetchone()
+                if row is None:
+                    return None, results.Result(
+                        success=False,
+                        error_code=results.NONEXISTENT_TASK_ERR,
+                    )
                 subject, description, completed = row
                 data = {
                     "subject": subject,
