@@ -34,6 +34,11 @@ prepared_statements = [
         """,
         args=3,
     ),
+    PreparedStatement(
+        name="remove_task",
+        statement="DELETE FROM api.tasks WHERE identifier = $1;",
+        args=1,
+    ),
 ]
 
 
