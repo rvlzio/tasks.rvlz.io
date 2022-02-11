@@ -52,15 +52,15 @@ class TaskService(Service):
                     )
         return results.Result(success=True)
 
-    def update(self, task_id: str, subject: str) -> results.Result:
+    def update(
+        self, task_id: str, subject: str, description: str, completed: bool
+    ) -> results.Result:
         with self.conn:
             with self.conn.cursor() as cursor:
-                prepared_statement = self.find_prepared_statement(
-                    "change_task_subject"
-                )
+                prepared_statement = self.find_prepared_statement("update_task")
                 cursor.execute(
                     prepared_statement.execution_statement(),
-                    (subject, task_id),
+                    (subject, description, completed, task_id),
                 )
         return results.Result(success=True)
 
