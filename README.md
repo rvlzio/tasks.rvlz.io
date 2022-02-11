@@ -5,7 +5,7 @@
 * GET /tasks/{id}
 * GET /tasks
 * DELETE /tasks/{id}
-* PATCH /tasks/{id}
+* PUT /tasks/{id}
 * POST /users
 * GET /users/{id}
 * POST /sessions
@@ -123,9 +123,9 @@ curl https://api.tasks.rvlz.io/v1/tasks/hyeU3H
 Update task.
 
 ```sh
-curl -X PATCH https://api.tasks.rvlz.io/v1/tasks/hyeU3H \
+curl -X PUT https://api.tasks.rvlz.io/v1/tasks/hyeU3H \
 -H 'Content-Type: application/json' \
--d '{"completed": true}'
+-d '{"subject": "Phone bill", "description": "Ask for extension","completed": true}'
 ```
 
 Location response header has relative path to new task.
