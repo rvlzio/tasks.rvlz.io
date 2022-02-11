@@ -1,7 +1,7 @@
 import typing
 
-from services.tasks import initialize_service
-from services.tasks.conftest import (
+from services.task import initialize_service
+from services.task.conftest import (
     GET_TASK_COUNT_BY_ID,
     GET_TASK_BY_ID,
 )
