@@ -132,3 +132,17 @@ def test_updating_task(api_conn, test_conn):
         description="ask for new extension",
         completed=True,
     )
+
+
+def test_updating_missing_task(api_conn, test_conn):
+    service = initialize_service(conn=api_conn)
+
+    result = service.update(
+        "some_task_id",
+        subject="Phone bill due",
+        description="ask for new extension",
+        completed=True,
+    )
+
+    assert not result.success
+    assert result.error_code == results.NONEXISTENT_TASK_ERR
