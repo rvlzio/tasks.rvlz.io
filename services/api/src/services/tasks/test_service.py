@@ -107,3 +107,23 @@ def test_deleting_missing_task(api_conn, test_conn):
 
     assert not result.success
     assert result.error_code == results.NONEXISTENT_TASK_ERR
+
+
+def test_updating_subject(api_conn, test_conn):
+    service = initialize_service(conn=api_conn)
+    task_id, result = service.create(
+        subject="Phone bill",
+        description="ask for extension",
+    )
+
+    result = service.update(task_id, subject="Phone bill Due")
+
+    assert result.success
+    assert result.error_code is None
+    assert task_field_values(
+        conn=test_conn,
+        task_id=task_id,
+        subject="Phone bill Due",
+        description="ask for extension",
+        completed=False,
+    )

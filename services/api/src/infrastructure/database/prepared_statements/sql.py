@@ -43,6 +43,13 @@ prepared_statements = [
         """,
         args=1,
     ),
+    PreparedStatement(
+        name="change_task_subject",
+        statement="""
+        UPDATE api.tasks SET subject = $1 WHERE identifier = $2;
+        """,
+        args=2,
+    ),
 ]
 
 
