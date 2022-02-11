@@ -52,3 +52,7 @@ TASK_SUBJECT_TOO_LONG = ErrorCode(
 TASK_DESCRIPTION_TOO_LONG = ErrorCode(
     description="task_description_too_long",
 )
+
+NONEXISTENT_TASK_ERR = ErrorCode(
+    description="nonexisting_task",
+)

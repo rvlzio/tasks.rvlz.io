@@ -36,7 +36,11 @@ prepared_statements = [
     ),
     PreparedStatement(
         name="remove_task",
-        statement="DELETE FROM api.tasks WHERE identifier = $1;",
+        statement="""
+        WITH deleted AS
+        (DELETE FROM api.tasks WHERE identifier = $1 RETURNING *)
+        SELECT COUNT(*) FROM deleted;
+        """,
         args=1,
     ),
 ]

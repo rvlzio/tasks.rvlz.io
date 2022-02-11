@@ -98,3 +98,12 @@ def test_task_deletion(api_conn, test_conn):
     assert result.success
     assert result.error_code is None
     assert not task_exists(test_conn, task_id)
+
+
+def test_deleting_missing_task(api_conn, test_conn):
+    service = initialize_service(conn=api_conn)
+
+    result = service.delete("some_task_id")
+
+    assert not result.success
+    assert result.error_code == results.NONEXISTENT_TASK_ERR
