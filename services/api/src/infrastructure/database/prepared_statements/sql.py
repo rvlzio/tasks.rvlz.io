@@ -54,6 +54,14 @@ prepared_statements = [
         """,
         args=4,
     ),
+    PreparedStatement(
+        name="find_task",
+        statement="""
+        SELECT subject, description, completed FROM api.tasks
+        WHERE identifier = $1;
+        """,
+        args=1,
+    ),
 ]
 
 
