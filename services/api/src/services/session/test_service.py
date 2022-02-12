@@ -60,9 +60,9 @@ def username_in_stored_session(
 
 def test_session_start(api_conn, test_conn):
     secret_key = "my_secret"
-    service = initialize_service(conn=api_conn, secret_key=secret_key)
+    sut = initialize_service(conn=api_conn, secret_key=secret_key)
 
-    token, result = service.start_session("user")
+    token, result = sut.start_session("user")
 
     assert result.success
     assert result.error_code is None
@@ -73,10 +73,10 @@ def test_session_start(api_conn, test_conn):
 
 def test_session_end(api_conn, test_conn):
     secret_key = "my_secret"
-    service = initialize_service(conn=api_conn, secret_key=secret_key)
-    token, _ = service.start_session("user")
+    sut = initialize_service(conn=api_conn, secret_key=secret_key)
+    token, _ = sut.start_session("user")
 
-    result = service.end_session(token)
+    result = sut.end_session(token)
 
     assert result.success
     assert result.error_code is None
@@ -85,11 +85,11 @@ def test_session_end(api_conn, test_conn):
 
 def test_invalid_hmac_tag_cannot_end_session(api_conn, test_conn):
     secret_key = "my_secret"
-    service = initialize_service(conn=api_conn, secret_key=secret_key)
-    token, _ = service.start_session("user")
+    sut = initialize_service(conn=api_conn, secret_key=secret_key)
+    token, _ = sut.start_session("user")
     malformed_token = token.split(".")[0] + "." + "invalid_hmac_tag=="
 
-    result = service.end_session(malformed_token)
+    result = sut.end_session(malformed_token)
 
     assert not result.success
     assert result.error_code == results.INVALID_HMAC_TAG_ERR
@@ -106,9 +106,9 @@ def test_invalid_hmac_tag_cannot_end_session(api_conn, test_conn):
 )
 def test_invalid_base64_tag_cannot_end_session(api_conn, test_conn, bad_token):
     secret_key = "my_secret"
-    service = initialize_service(conn=api_conn, secret_key=secret_key)
+    sut = initialize_service(conn=api_conn, secret_key=secret_key)
 
-    result = service.end_session(bad_token)
+    result = sut.end_session(bad_token)
 
     assert not result.success
     assert result.error_code == results.BAD_BASE64_ENCODING_ERR
@@ -124,9 +124,9 @@ def test_invalid_base64_tag_cannot_end_session(api_conn, test_conn, bad_token):
 )
 def test_malformed_token_cannot_end_session(api_conn, test_conn, bad_token):
     secret_key = "my_secret"
-    service = initialize_service(conn=api_conn, secret_key=secret_key)
+    sut = initialize_service(conn=api_conn, secret_key=secret_key)
 
-    result = service.end_session(bad_token)
+    result = sut.end_session(bad_token)
 
     assert not result.success
     assert result.error_code == results.MALFORMED_SESSION_TOKEN_ERR

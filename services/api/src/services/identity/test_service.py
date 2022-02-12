@@ -48,10 +48,10 @@ def user_count_by_email(conn: typing.Any, email: str) -> int:
 
 
 def test_user_registration(api_conn, test_conn):
-    service = IdentityService(conn=api_conn)
+    sut = IdentityService(conn=api_conn)
     username, email, password = "user", "user@gmail.com", "password"
 
-    identifier, result = service.register_user(username, email, password)
+    identifier, result = sut.register_user(username, email, password)
 
     assert result.success
     assert result.error_code is None
@@ -59,12 +59,12 @@ def test_user_registration(api_conn, test_conn):
 
 
 def test_user_registration_with_taken_username(api_conn, test_conn):
-    service = IdentityService(conn=api_conn)
+    sut = IdentityService(conn=api_conn)
     username, email, password = "user", "user@gmail.com", "password"
-    service.register_user(username, email, password)
+    sut.register_user(username, email, password)
     other_email, other_password = "other_user@gmail.com", "other_password"
 
-    identifier, result = service.register_user(
+    identifier, result = sut.register_user(
         "user",
         other_email,
         other_password,
@@ -76,12 +76,12 @@ def test_user_registration_with_taken_username(api_conn, test_conn):
 
 
 def test_user_registration_with_taken_email(api_conn, test_conn):
-    service = IdentityService(conn=api_conn)
+    sut = IdentityService(conn=api_conn)
     username, email, password = "user", "user@gmail.com", "password"
-    service.register_user(username, email, password)
+    sut.register_user(username, email, password)
     other_username, other_password = "other_user", "other_password"
 
-    identifier, result = service.register_user(
+    identifier, result = sut.register_user(
         other_username,
         "user@gmail.com",
         other_password,
@@ -93,31 +93,31 @@ def test_user_registration_with_taken_email(api_conn, test_conn):
 
 
 def test_user_authentication(api_conn):
-    service = IdentityService(conn=api_conn)
+    sut = IdentityService(conn=api_conn)
     username, email, password = "user", "user@gmail.com", "mypassword"
-    service.register_user(username, email, password)
+    sut.register_user(username, email, password)
 
-    result = service.authenticate_user(username, password)
+    result = sut.authenticate_user(username, password)
 
     assert result.success is True
     assert result.error_code is None
 
 
 def test_user_authentication_failure(api_conn):
-    service = IdentityService(conn=api_conn)
+    sut = IdentityService(conn=api_conn)
     username, email, password = "user", "user@gmail.com", "mypassword"
-    service.register_user(username, email, password)
+    sut.register_user(username, email, password)
 
-    result = service.authenticate_user(username, "other_password")
+    result = sut.authenticate_user(username, "other_password")
 
     assert result.success is False
     assert result.error_code == results.INVALID_CREDENTIALS_ERR
 
 
 def test_user_authentication_for_missing_user(api_conn):
-    service = IdentityService(conn=api_conn)
+    sut = IdentityService(conn=api_conn)
 
-    result = service.authenticate_user("user", "password")
+    result = sut.authenticate_user("user", "password")
 
     assert result.success is False
     assert result.error_code == results.NONEXISTENT_USER_ERR

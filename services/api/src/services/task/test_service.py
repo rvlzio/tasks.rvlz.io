@@ -70,9 +70,9 @@ def one_user_task_exists(conn: typing.Any, username: str, task_id: str) -> bool:
 
 
 def test_task_creation(api_conn, test_conn):
-    service = initialize_service(conn=api_conn)
+    sut = initialize_service(conn=api_conn)
 
-    task_id, result = service.create_task(
+    task_id, result = sut.create_task(
         subject="Phone bill", description="ask for extension"
     )
 
@@ -90,9 +90,9 @@ def test_task_creation(api_conn, test_conn):
 
 
 def test_task_subject_limit(api_conn, test_conn):
-    service = initialize_service(conn=api_conn, subject_limit=10)
+    sut = initialize_service(conn=api_conn, subject_limit=10)
 
-    task_id, result = service.create_task(
+    task_id, result = sut.create_task(
         subject="New Phone bill", description="ask for extension"
     )
 
@@ -103,9 +103,9 @@ def test_task_subject_limit(api_conn, test_conn):
 
 
 def test_task_description_limit(api_conn, test_conn):
-    service = initialize_service(conn=api_conn, description_limit=10)
+    sut = initialize_service(conn=api_conn, description_limit=10)
 
-    task_id, result = service.create_task(
+    task_id, result = sut.create_task(
         subject="New Phone bill", description="ask for extension"
     )
 
@@ -116,12 +116,12 @@ def test_task_description_limit(api_conn, test_conn):
 
 
 def test_task_deletion(api_conn, test_conn):
-    service = initialize_service(conn=api_conn)
-    task_id, result = service.create_task(
+    sut = initialize_service(conn=api_conn)
+    task_id, result = sut.create_task(
         subject="Phone bill", description="ask for extension"
     )
 
-    result = service.delete_task(task_id)
+    result = sut.delete_task(task_id)
 
     assert result.success
     assert result.error_code is None
@@ -129,22 +129,22 @@ def test_task_deletion(api_conn, test_conn):
 
 
 def test_deleting_missing_task(api_conn, test_conn):
-    service = initialize_service(conn=api_conn)
+    sut = initialize_service(conn=api_conn)
 
-    result = service.delete_task("some_task_id")
+    result = sut.delete_task("some_task_id")
 
     assert not result.success
     assert result.error_code == results.NONEXISTENT_TASK_ERR
 
 
 def test_updating_task(api_conn, test_conn):
-    service = initialize_service(conn=api_conn)
-    task_id, result = service.create_task(
+    sut = initialize_service(conn=api_conn)
+    task_id, result = sut.create_task(
         subject="Phone bill",
         description="ask for extension",
     )
 
-    result = service.update_task(
+    result = sut.update_task(
         task_id,
         subject="Phone bill due",
         description="ask for new extension",
@@ -163,9 +163,9 @@ def test_updating_task(api_conn, test_conn):
 
 
 def test_updating_missing_task(api_conn, test_conn):
-    service = initialize_service(conn=api_conn)
+    sut = initialize_service(conn=api_conn)
 
-    result = service.update_task(
+    result = sut.update_task(
         "some_task_id",
         subject="Phone bill due",
         description="ask for new extension",

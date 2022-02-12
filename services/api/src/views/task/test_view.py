@@ -5,13 +5,13 @@ from application import results
 
 
 def test_current_task(api_conn, test_conn):
-    view = initialize_view(conn=api_conn)
+    sut = initialize_view(conn=api_conn)
     service = initialize_service(conn=api_conn)
     task_id, _ = service.create_task(
         subject="Pay phone bill", description="Ask for extension"
     )
 
-    task, result = view.current(task_id)
+    task, result = sut.current(task_id)
 
     assert result.success
     assert result.error_code is None
@@ -23,9 +23,9 @@ def test_current_task(api_conn, test_conn):
 
 
 def test_missing_current_task(api_conn, test_conn):
-    view = initialize_view(conn=api_conn)
+    sut = initialize_view(conn=api_conn)
 
-    task, result = view.current("some_task_id")
+    task, result = sut.current("some_task_id")
 
     assert not result.success
     assert result.error_code == results.NONEXISTENT_TASK_ERR

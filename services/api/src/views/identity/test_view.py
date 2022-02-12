@@ -5,10 +5,10 @@ from application import results
 
 def test_user_profile(api_conn):
     service = initialize_service(conn=api_conn)
-    view = initialize_view(conn=api_conn)
+    sut = initialize_view(conn=api_conn)
     user_id, _ = service.register_user("user", "user@gmail.com", "password")
 
-    profile, result = view.user_profile(user_id)
+    profile, result = sut.user_profile(user_id)
 
     assert result.success
     assert result.error_code is None
@@ -18,9 +18,9 @@ def test_user_profile(api_conn):
 
 
 def test_missing_user_registration(api_conn):
-    view = initialize_view(conn=api_conn)
+    sut = initialize_view(conn=api_conn)
 
-    profile, result = view.user_profile("some_user_id")
+    profile, result = sut.user_profile("some_user_id")
 
     assert not result.success
     assert result.error_code == results.NONEXISTENT_USER_ERR
