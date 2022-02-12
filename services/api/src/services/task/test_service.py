@@ -93,7 +93,7 @@ def test_task_deletion(api_conn, test_conn):
         subject="Phone bill", description="ask for extension"
     )
 
-    result = service.delete(task_id)
+    result = service.delete_task(task_id)
 
     assert result.success
     assert result.error_code is None
@@ -103,7 +103,7 @@ def test_task_deletion(api_conn, test_conn):
 def test_deleting_missing_task(api_conn, test_conn):
     service = initialize_service(conn=api_conn)
 
-    result = service.delete("some_task_id")
+    result = service.delete_task("some_task_id")
 
     assert not result.success
     assert result.error_code == results.NONEXISTENT_TASK_ERR

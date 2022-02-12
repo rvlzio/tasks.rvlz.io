@@ -37,7 +37,7 @@ class TaskService(Service):
                 )
         return task_id, results.Result(success=True)
 
-    def delete(self, task_id: str) -> results.Result:
+    def delete_task(self, task_id: str) -> results.Result:
         with self.conn:
             with self.conn.cursor() as cursor:
                 prepared_statement = self.find_prepared_statement("remove_task")
