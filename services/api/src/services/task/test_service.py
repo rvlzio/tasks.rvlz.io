@@ -116,7 +116,7 @@ def test_updating_task(api_conn, test_conn):
         description="ask for extension",
     )
 
-    result = service.update(
+    result = service.update_task(
         task_id,
         subject="Phone bill due",
         description="ask for new extension",
@@ -137,7 +137,7 @@ def test_updating_task(api_conn, test_conn):
 def test_updating_missing_task(api_conn, test_conn):
     service = initialize_service(conn=api_conn)
 
-    result = service.update(
+    result = service.update_task(
         "some_task_id",
         subject="Phone bill due",
         description="ask for new extension",

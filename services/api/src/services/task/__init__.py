@@ -52,7 +52,7 @@ class TaskService(Service):
                     )
         return results.Result(success=True)
 
-    def update(
+    def update_task(
         self, task_id: str, subject: str, description: str, completed: bool
     ) -> results.Result:
         with self.conn:
