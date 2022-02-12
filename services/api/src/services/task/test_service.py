@@ -189,3 +189,19 @@ def test_creating_user_task(api_conn, test_conn):
     assert result.success
     assert result.error_code is None
     assert one_user_task_exists(test_conn, username, task_id)
+
+
+def test_user_task_subject_limit(api_conn, test_conn):
+    username = create_user(test_conn)
+    sut = initialize_service(conn=api_conn, subject_limit=10)
+
+    task_id, result = sut.create_user_task(
+        username=username,
+        subject="New Phone bill",
+        description="ask for extension",
+    )
+
+    assert not result.success
+    assert result.error_code == results.TASK_SUBJECT_TOO_LONG
+    assert task_id == ""
+    assert not one_user_task_exists(test_conn, username, task_id)

@@ -72,6 +72,10 @@ class TaskService(Service):
     def create_user_task(
         self, username: str, subject: str, description: str
     ) -> typing.Tuple[str, results.Result]:
+        if len(subject) > self.subject_limit:
+            return "", results.Result(
+                success=False, error_code=results.TASK_SUBJECT_TOO_LONG
+            )
         task_id = self.generate_unique_id()
         with self.conn:
             with self.conn.cursor() as cursor:
