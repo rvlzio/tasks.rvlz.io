@@ -76,6 +76,10 @@ class TaskService(Service):
             return "", results.Result(
                 success=False, error_code=results.TASK_SUBJECT_TOO_LONG
             )
+        if len(description) > self.description_limit:
+            return "", results.Result(
+                success=False, error_code=results.TASK_DESCRIPTION_TOO_LONG
+            )
         task_id = self.generate_unique_id()
         with self.conn:
             with self.conn.cursor() as cursor:
