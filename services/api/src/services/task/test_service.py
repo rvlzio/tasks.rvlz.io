@@ -44,7 +44,7 @@ def task_field_values(
 def test_task_creation(api_conn, test_conn):
     service = initialize_service(conn=api_conn)
 
-    task_id, result = service.create(
+    task_id, result = service.create_task(
         subject="Phone bill", description="ask for extension"
     )
 
@@ -64,7 +64,7 @@ def test_task_creation(api_conn, test_conn):
 def test_task_subject_limit(api_conn, test_conn):
     service = initialize_service(conn=api_conn, subject_limit=10)
 
-    task_id, result = service.create(
+    task_id, result = service.create_task(
         subject="New Phone bill", description="ask for extension"
     )
 
@@ -77,7 +77,7 @@ def test_task_subject_limit(api_conn, test_conn):
 def test_task_description_limit(api_conn, test_conn):
     service = initialize_service(conn=api_conn, description_limit=10)
 
-    task_id, result = service.create(
+    task_id, result = service.create_task(
         subject="New Phone bill", description="ask for extension"
     )
 
@@ -89,7 +89,7 @@ def test_task_description_limit(api_conn, test_conn):
 
 def test_task_deletion(api_conn, test_conn):
     service = initialize_service(conn=api_conn)
-    task_id, result = service.create(
+    task_id, result = service.create_task(
         subject="Phone bill", description="ask for extension"
     )
 
@@ -111,7 +111,7 @@ def test_deleting_missing_task(api_conn, test_conn):
 
 def test_updating_task(api_conn, test_conn):
     service = initialize_service(conn=api_conn)
-    task_id, result = service.create(
+    task_id, result = service.create_task(
         subject="Phone bill",
         description="ask for extension",
     )

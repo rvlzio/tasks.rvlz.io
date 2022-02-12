@@ -16,7 +16,7 @@ class TaskService(Service):
         self.description_limit = description_limit
         super().__init__()
 
-    def create(
+    def create_task(
         self, subject: str, description: str
     ) -> typing.Tuple[str, results.Result]:
         if len(subject) > self.subject_limit:
