@@ -56,6 +56,11 @@ jobs:
         uses: actions/setup-go@v1
         with:
           go-version: 1.17
+      - name: Set up NodeJS 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'npm'
       - name: Set up Python 3.10
         uses: actions/setup-python@v2
         with:
@@ -100,3 +105,26 @@ jobs:
           -e TOKEN_STORE_TEST_PASSWORD=$TOKEN_STORE_ADMIN_PASSWORD
           -e TOKEN_STORE_TEST_NAME=$TOKEN_STORE_NAME
           app/api sh -c 'cd /src && python -m pytest'
+      - name: Start API server for end-to-end tests
+        run: >
+          docker run -d --rm --network "host" --name api_instance
+          -e DATABASE_USERNAME=$DATABASE_API_USERNAME
+          -e DATABASE_PASSWORD=$DATABASE_API_PASSWORD
+          -e DATABASE_HOST=$DATABASE_HOST
+          -e DATABASE_NAME=$DATABASE_NAME
+          -e DATABASE_TEST_USERNAME=$DATABASE_ADMIN_USERNAME
+          -e DATABASE_TEST_PASSWORD=$DATABASE_ADMIN_PASSWORD
+          -e DATABASE_TEST_NAME=$DATABASE_NAME
+          -e TOKEN_STORE_USERNAME=$TOKEN_STORE_API_USERNAME
+          -e TOKEN_STORE_PASSWORD=$TOKEN_STORE_API_PASSWORD
+          -e TOKEN_STORE_HOST=$TOKEN_STORE_HOST
+          -e TOKEN_STORE_NAME=$TOKEN_STORE_NAME
+          -e TOKEN_STORE_TEST_USERNAME=$TOKEN_STORE_ADMIN_USERNAME
+          -e TOKEN_STORE_TEST_PASSWORD=$TOKEN_STORE_ADMIN_PASSWORD
+          -e TOKEN_STORE_TEST_NAME=$TOKEN_STORE_NAME
+          -p 80:80
+          app/api
+      - name: Run end-to-end tests
+        run: npx newman run ci/e2e/health_check.json
+      - name: Stop API server container
+        run: docker stop api_instance

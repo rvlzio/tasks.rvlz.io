@@ -1,0 +1,22 @@
+{
+  "name": "tasks.rvlz.io",
+  "version": "1.0.0",
+  "description": "## REST Endpoints * POST /tasks * GET /tasks/{id} * GET /tasks * DELETE /tasks/{id} * PUT /tasks/{id} * POST /users * GET /users/{id} * POST /sessions * DELETE /sessions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rvlzio/tasks.rvlz.io.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rvlzio/tasks.rvlz.io/issues"
+  },
+  "homepage": "https://github.com/rvlzio/tasks.rvlz.io#readme",
+  "dependencies": {
+    "newman": "^5.3.1"
+  }
+}
