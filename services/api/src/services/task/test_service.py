@@ -237,3 +237,13 @@ def test_delete_user_task(api_conn, test_conn):
     assert result.success
     assert result.error_code is None
     assert not one_user_task_exists(test_conn, username, task_id)
+
+
+def test_deleting_missing_user_task(api_conn, test_conn):
+    username = create_user(test_conn)
+    sut = initialize_service(conn=api_conn)
+
+    result = sut.delete_user_task(username=username, task_id="some_task_id")
+
+    assert not result.success
+    assert result.error_code == results.NONEXISTENT_TASK_ERR

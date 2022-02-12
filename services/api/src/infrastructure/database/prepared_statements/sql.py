@@ -75,12 +75,14 @@ prepared_statements = [
     PreparedStatement(
         name="remove_user_task",
         statement="""
-        DELETE FROM api.tasks
-        WHERE api.tasks.identifier = $2 AND
-        api.tasks._user_pk = (
-            SELECT _pk FROM api.users WHERE
-            api.users.username = $1
-        );
+        WITH deleted AS (
+            DELETE FROM api.tasks
+            WHERE api.tasks.identifier = $2 AND
+            api.tasks._user_pk = (
+                SELECT _pk FROM api.users WHERE
+                api.users.username = $1
+            ) RETURNING *
+        ) SELECT COUNT(*) FROM deleted;
         """,
         args=2,
     ),
