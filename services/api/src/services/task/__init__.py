@@ -69,6 +69,21 @@ class TaskService(Service):
                     )
         return results.Result(success=True)
 
+    def create_user_task(
+        self, username: str, subject: str, description: str
+    ) -> typing.Tuple[str, results.Result]:
+        task_id = self.generate_unique_id()
+        with self.conn:
+            with self.conn.cursor() as cursor:
+                prepared_statement = self.find_prepared_statement(
+                    "add_user_task"
+                )
+                cursor.execute(
+                    prepared_statement.execution_statement(),
+                    (username, task_id, subject, description),
+                )
+        return task_id, results.Result(success=True)
+
 
 def initialize_service(
     conn: typing.Any,

@@ -62,6 +62,16 @@ prepared_statements = [
         """,
         args=1,
     ),
+    PreparedStatement(
+        name="add_user_task",
+        statement="""
+        INSERT INTO api.tasks
+        (identifier, subject, description, completed, _user_pk)
+        SELECT $2, $3, $4, FALSE, _pk FROM api.users
+        WHERE username = $1;
+        """,
+        args=4,
+    ),
 ]
 
 
