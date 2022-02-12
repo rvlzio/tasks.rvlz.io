@@ -221,3 +221,19 @@ def test_user_task_description_limit(api_conn, test_conn):
     assert result.error_code == results.TASK_DESCRIPTION_TOO_LONG
     assert task_id == ""
     assert not one_user_task_exists(test_conn, username, task_id)
+
+
+def test_delete_user_task(api_conn, test_conn):
+    username = create_user(test_conn)
+    sut = initialize_service(conn=api_conn)
+    task_id, _ = sut.create_user_task(
+        username=username,
+        subject="Phone bill",
+        description="ask for extension",
+    )
+
+    result = sut.delete_user_task(username=username, task_id=task_id)
+
+    assert result.success
+    assert result.error_code is None
+    assert not one_user_task_exists(test_conn, username, task_id)

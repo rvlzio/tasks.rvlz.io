@@ -92,6 +92,18 @@ class TaskService(Service):
                 )
         return task_id, results.Result(success=True)
 
+    def delete_user_task(self, username: str, task_id: str) -> results.Result:
+        with self.conn:
+            with self.conn.cursor() as cursor:
+                prepared_statement = self.find_prepared_statement(
+                    "remove_user_task"
+                )
+                cursor.execute(
+                    prepared_statement.execution_statement(),
+                    (username, task_id),
+                )
+        return results.Result(success=True)
+
 
 def initialize_service(
     conn: typing.Any,
