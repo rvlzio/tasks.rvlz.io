@@ -9,7 +9,7 @@ class TaskView(View):
         self.conn = conn
         super().__init__()
 
-    def current(
+    def current_task(
         self, task_id: str
     ) -> Tuple[Optional[Dict[str, Any]], results.Result]:
         with self.conn:
