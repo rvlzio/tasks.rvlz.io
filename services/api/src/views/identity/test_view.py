@@ -18,7 +18,7 @@ def test_user_profile(api_conn):
     assert profile["email"] == "user@gmail.com"
 
 
-def test_missing_user_registration(api_conn):
+def test_missing_user_profile(api_conn):
     sut = initialize_view(conn=api_conn)
 
     profile, result = sut.user_profile("some_user_id")
