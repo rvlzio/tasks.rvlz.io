@@ -109,6 +109,25 @@ class TaskService(Service):
                     )
         return results.Result(success=True)
 
+    def update_user_task(
+        self,
+        username: str,
+        task_id: str,
+        subject: str,
+        description: str,
+        completed: str,
+    ) -> results.Result:
+        with self.conn:
+            with self.conn.cursor() as cursor:
+                prepared_statement = self.find_prepared_statement(
+                    "update_user_task"
+                )
+                cursor.execute(
+                    prepared_statement.execution_statement(),
+                    (username, task_id, subject, description, completed),
+                )
+        return results.Result(success=True)
+
 
 def initialize_service(
     conn: typing.Any,

@@ -247,3 +247,31 @@ def test_deleting_missing_user_task(api_conn, test_conn):
 
     assert not result.success
     assert result.error_code == results.NONEXISTENT_TASK_ERR
+
+
+def test_updating_user_task(api_conn, test_conn):
+    username = create_user(test_conn)
+    sut = initialize_service(conn=api_conn)
+    task_id, _ = sut.create_user_task(
+        username=username,
+        subject="Phone bill",
+        description="ask for extension",
+    )
+
+    result = sut.update_user_task(
+        username=username,
+        task_id=task_id,
+        subject="Phone bill due",
+        description="ask for new extension",
+        completed=True,
+    )
+
+    assert result.success
+    assert result.error_code is None
+    assert task_field_values(
+        conn=test_conn,
+        task_id=task_id,
+        subject="Phone bill due",
+        description="ask for new extension",
+        completed=True,
+    )
