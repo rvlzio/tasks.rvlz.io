@@ -34,6 +34,28 @@ class IdentityView(View):
                 }
         return profile, results.Result(success=True)
 
+    def user_profile_by_username(
+        self,
+        username: str,
+    ) -> Tuple[Optional[Dict[str, str]], results.Result]:
+        with self.conn:
+            with self.conn.cursor() as cursor:
+                prepared_statement = self.find_prepared_statement(
+                    "get_user_profile_by_username"
+                )
+                cursor.execute(
+                    prepared_statement.execution_statement(),
+                    (username,),
+                )
+                row = cursor.fetchone()
+                user_id, email = row
+                profile = {
+                    "id": user_id,
+                    "username": username,
+                    "email": email,
+                }
+        return profile, results.Result(success=True)
+
 
 def initialize_view(conn: Any) -> IdentityView:
     return IdentityView(conn=conn)

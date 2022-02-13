@@ -109,6 +109,13 @@ prepared_statements = [
         """,
         args=2,
     ),
+    PreparedStatement(
+        name="get_user_profile_by_username",
+        statement="""
+        SELECT identifier, email FROM api.users WHERE username = $1;
+        """,
+        args=1,
+    ),
 ]
 
 
