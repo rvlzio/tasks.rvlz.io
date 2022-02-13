@@ -70,3 +70,14 @@ def test_current_user_task(api_conn, test_conn):
         "description": "Ask for extension",
         "completed": False,
     }
+
+
+def test_missing_current_user_task(api_conn, test_conn):
+    username = create_user(test_conn)
+    sut = initialize_view(conn=api_conn)
+
+    task, result = sut.current_user_task(username, "some_task_id")
+
+    assert not result.success
+    assert result.error_code == results.NONEXISTENT_TASK_ERR
+    assert task is None
