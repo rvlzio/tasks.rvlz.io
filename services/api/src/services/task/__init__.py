@@ -126,6 +126,11 @@ class TaskService(Service):
                     prepared_statement.execution_statement(),
                     (username, task_id, subject, description, completed),
                 )
+                row = cursor.fetchone()
+                if row[0] == 0:
+                    return results.Result(
+                        success=False, error_code=results.NONEXISTENT_TASK_ERR
+                    )
         return results.Result(success=True)
 
 

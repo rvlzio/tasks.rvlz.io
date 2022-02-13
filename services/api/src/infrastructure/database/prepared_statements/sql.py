@@ -89,9 +89,14 @@ prepared_statements = [
     PreparedStatement(
         name="update_user_task",
         statement="""
-        UPDATE api.tasks SET subject = $3, description = $4, completed = $5
-        WHERE api.tasks.identifier = $2 AND
-        api.tasks._user_pk = (SELECT _pk FROM api.users WHERE username = $1)
+        WITH updated AS (
+            UPDATE api.tasks SET
+            subject = $3, description = $4, completed = $5
+            WHERE api.tasks.identifier = $2 AND
+            api.tasks._user_pk = (
+                SELECT _pk FROM api.users WHERE username = $1
+            ) RETURNING *
+        ) SELECT COUNT(*) FROM updated;
         """,
         args=5,
     ),
