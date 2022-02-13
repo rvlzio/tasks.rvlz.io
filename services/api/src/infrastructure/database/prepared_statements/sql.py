@@ -77,10 +77,8 @@ prepared_statements = [
         statement="""
         WITH deleted AS (
             DELETE FROM api.tasks
-            WHERE api.tasks.identifier = $2 AND
-            api.tasks._user_pk = (
-                SELECT _pk FROM api.users WHERE
-                api.users.username = $1
+            WHERE identifier = $2 AND api.tasks._user_pk = (
+                SELECT _pk FROM api.users WHERE username = $1
             ) RETURNING *
         ) SELECT COUNT(*) FROM deleted;
         """,
@@ -92,7 +90,7 @@ prepared_statements = [
         WITH updated AS (
             UPDATE api.tasks SET
             subject = $3, description = $4, completed = $5
-            WHERE api.tasks.identifier = $2 AND
+            WHERE identifier = $2 AND
             api.tasks._user_pk = (
                 SELECT _pk FROM api.users WHERE username = $1
             ) RETURNING *
