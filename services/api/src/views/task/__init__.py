@@ -33,6 +33,27 @@ class TaskView(View):
                 }
         return data, results.Result(success=True)
 
+    def current_user_task(
+        self, username: str, task_id: str
+    ) -> Tuple[Optional[Dict[str, Any]], results.Result]:
+        with self.conn:
+            with self.conn.cursor() as cursor:
+                prepared_statement = self.find_prepared_statement(
+                    "find_user_task"
+                )
+                cursor.execute(
+                    prepared_statement.execution_statement(),
+                    (username, task_id),
+                )
+                row = cursor.fetchone()
+                subject, description, completed = row
+                data = {
+                    "subject": subject,
+                    "description": description,
+                    "completed": completed,
+                }
+        return data, results.Result(success=True)
+
 
 def initialize_view(conn: Any) -> TaskView:
     return TaskView(conn=conn)

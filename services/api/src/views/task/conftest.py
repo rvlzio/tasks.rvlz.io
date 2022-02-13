@@ -7,8 +7,18 @@ from infrastructure.database.prepared_statements import (
 )
 from infrastructure.database.prepared_statements import sql
 
+CREATE_USER = PreparedStatement(
+    name="create_user",
+    statement="""
+    INSERT INTO api.users (identifier, username, email, password_hash)
+    VALUES ($1, $2, $3, $4);
+    """,
+    args=4,
+)
 
-test_prepared_statements = []
+test_prepared_statements = [
+    CREATE_USER,
+]
 
 
 @pytest.fixture(scope="module")
@@ -35,6 +45,7 @@ def api_conn(raw_test_conn, raw_api_conn):
     yield raw_api_conn
     with raw_test_conn:
         with raw_test_conn.cursor() as cursor:
+            cursor.execute("DELETE FROM api.tasks")
             cursor.execute("DELETE FROM api.users")
 
 

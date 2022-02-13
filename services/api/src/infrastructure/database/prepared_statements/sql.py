@@ -100,6 +100,17 @@ prepared_statements = [
         """,
         args=5,
     ),
+    PreparedStatement(
+        name="find_user_task",
+        statement="""
+        SELECT subject, description, completed FROM api.tasks
+        WHERE identifier = $2 AND
+        _user_pk = (
+            SELECT _pk FROM api.users WHERE username = $1
+        );
+        """,
+        args=2,
+    ),
 ]
 
 
