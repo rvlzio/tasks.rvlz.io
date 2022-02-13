@@ -64,6 +64,7 @@ def api_conn(raw_test_conn, raw_api_conn):
     yield raw_api_conn
     with raw_test_conn:
         with raw_test_conn.cursor() as cursor:
+            cursor.execute("DELETE FROM api.tasks")
             cursor.execute("DELETE FROM api.users")
 
 
