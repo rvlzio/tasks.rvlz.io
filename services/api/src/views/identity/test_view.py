@@ -12,7 +12,8 @@ def test_user_profile(api_conn):
 
     assert result.success
     assert result.error_code is None
-    assert len(profile) == 2
+    assert len(profile) == 3
+    assert profile["id"] == user_id
     assert profile["username"] == "user"
     assert profile["email"] == "user@gmail.com"
 

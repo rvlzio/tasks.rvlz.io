@@ -29,6 +29,7 @@ class IdentityView(View):
                     )
                 username, email = row
                 profile = {
+                    "id": user_id,
                     "username": username,
                     "email": email,
                 }
