@@ -40,3 +40,13 @@ def test_user_profile_by_username(api_conn):
     assert profile["id"] == user_id
     assert profile["username"] == "user"
     assert profile["email"] == "user@gmail.com"
+
+
+def test_getting_by_username_missing_user_profile(api_conn):
+    sut = initialize_view(conn=api_conn)
+
+    profile, result = sut.user_profile_by_username("user")
+
+    assert not result.success
+    assert result.error_code == results.NONEXISTENT_USER_ERR
+    assert profile is None

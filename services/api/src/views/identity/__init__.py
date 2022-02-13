@@ -48,6 +48,10 @@ class IdentityView(View):
                     (username,),
                 )
                 row = cursor.fetchone()
+                if row is None:
+                    return None, results.Result(
+                        success=False, error_code=results.NONEXISTENT_USER_ERR
+                    )
                 user_id, email = row
                 profile = {
                     "id": user_id,
