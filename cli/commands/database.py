@@ -43,3 +43,9 @@ def drop_database_user(username):
 @cli.command("list-users")
 def list_users():
     database.list_users()
+
+
+@cli.command("clear-table")
+@click.argument("table")
+def clear_table(table):
+    database.clear_table(table)

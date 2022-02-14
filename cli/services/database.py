@@ -73,3 +73,13 @@ def list_users(conn):
         ]
     )
     click.echo(users)
+
+
+@database_connection
+def clear_table(conn, table):
+    sql = f"""
+    DELETE FROM {table};
+    """
+    cur = conn.cursor()
+    cur.execute(sql)
+    click.echo(f"table '{table}' cleared")
