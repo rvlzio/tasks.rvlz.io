@@ -65,6 +65,8 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: "3.10"
+      - name: Install psql client for postgreql
+        run: sudo apt install postgresql-client -y
       - name: Install python virtual environment
         run: python -m venv venv
       - name: Activate python virtual environment
@@ -105,6 +107,8 @@ jobs:
           -e TOKEN_STORE_TEST_PASSWORD=$TOKEN_STORE_ADMIN_PASSWORD
           -e TOKEN_STORE_TEST_NAME=$TOKEN_STORE_NAME
           app/api sh -c 'cd /src && python -m pytest'
+      - name: Prepare database for end-to-end tests
+        run: source ./cli/scripts/prepare_database_for_e2e_tests.sh
       - name: Start API server for end-to-end tests
         run: >
           docker run -d --rm --network "host" --name api_instance
