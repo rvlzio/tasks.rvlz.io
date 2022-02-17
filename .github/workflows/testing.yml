@@ -1,6 +1,8 @@
 name: Tests
 on: [push]
 env:
+  # General
+  SECRET_KEY: secret_key
   # Database
   DATABASE_ADMIN_USERNAME: admin
   DATABASE_ADMIN_PASSWORD: password
@@ -92,6 +94,7 @@ jobs:
       - name: Run integration and unit tests in API container
         run: >
           docker run --rm --network "host"
+          -e SECRET_KEY=$SECRET_KEY
           -e DATABASE_USERNAME=$DATABASE_API_USERNAME
           -e DATABASE_PASSWORD=$DATABASE_API_PASSWORD
           -e DATABASE_HOST=$DATABASE_HOST
@@ -112,6 +115,7 @@ jobs:
       - name: Start API server for end-to-end tests
         run: >
           docker run -d --rm --network "host" --name api_instance
+          -e SECRET_KEY=$SECRET_KEY
           -e DATABASE_USERNAME=$DATABASE_API_USERNAME
           -e DATABASE_PASSWORD=$DATABASE_API_PASSWORD
           -e DATABASE_HOST=$DATABASE_HOST
