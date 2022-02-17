@@ -40,7 +40,7 @@ class Config:
     MAXIMUM_USERNAME_LENGTH: int = 30
     MINIMUM_USERNAME_LENGTH: int = 3
     MAXIMUM_PASSWORD_LENGTH: int = 100
-    MINIMUM_PASSWORD_LENGTH: int = 16
+    MINIMUM_PASSWORD_LENGTH: int = 8
 
 
 @dataclass
