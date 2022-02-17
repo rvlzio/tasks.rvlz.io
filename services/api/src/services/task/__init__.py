@@ -40,7 +40,9 @@ class TaskService(Service):
     def delete_task(self, task_id: str) -> results.Result:
         with self.conn:
             with self.conn.cursor() as cursor:
-                prepared_statement = self.find_prepared_statement("remove_task")
+                prepared_statement = self.find_prepared_statement(
+                    "remove_task"
+                )
                 cursor.execute(
                     prepared_statement.execution_statement(),
                     (task_id,),
@@ -57,7 +59,9 @@ class TaskService(Service):
     ) -> results.Result:
         with self.conn:
             with self.conn.cursor() as cursor:
-                prepared_statement = self.find_prepared_statement("update_task")
+                prepared_statement = self.find_prepared_statement(
+                    "update_task"
+                )
                 cursor.execute(
                     prepared_statement.execution_statement(),
                     (subject, description, completed, task_id),

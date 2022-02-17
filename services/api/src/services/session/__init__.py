@@ -18,7 +18,9 @@ class SessionService(Service):
         self.token_store = token_store
         self.duration = duration
 
-    def start_session(self, username: str) -> typing.Tuple[str, results.Result]:
+    def start_session(
+        self, username: str
+    ) -> typing.Tuple[str, results.Result]:
         expiry = datetime.utcnow() + timedelta(seconds=self.duration)
         token_id = self.token_store.create_token(username, expiry)
         return token_id, results.Result(success=True)

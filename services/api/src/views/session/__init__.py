@@ -16,7 +16,9 @@ class SessionView(View):
     def __init__(self, token_store: TokenStore):
         self.token_store = token_store
 
-    def session_username(self, token: str) -> typing.Tuple[str, results.Result]:
+    def session_username(
+        self, token: str
+    ) -> typing.Tuple[str, results.Result]:
         try:
             token = self.token_store.read_token(token)
             if token is None:

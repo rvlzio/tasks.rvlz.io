@@ -6,7 +6,9 @@ from infrastructure.database.prepared_statements import (
     run_prepared_statements,
 )
 from infrastructure.database.prepared_statements import sql
+from config import initialize_config_factory
 
+config_factory = initialize_config_factory()
 
 USER_COUNT_BY_ID_USERNAME_AND_EMAIL = PreparedStatement(
     name="user_count_by_id_username_and_email",
@@ -42,7 +44,8 @@ test_prepared_statements = [
 
 @pytest.fixture(scope="module")
 def raw_test_conn():
-    conn = database.generate_test_connection()
+    config = config_factory.load(privileged=True)
+    conn = database.generate_connection(config)
     run_prepared_statements(
         conn,
         test_prepared_statements,
@@ -53,7 +56,8 @@ def raw_test_conn():
 
 @pytest.fixture(scope="module")
 def raw_api_conn():
-    conn = database.generate_api_connection(test=True)
+    config = config_factory.load(test=True)
+    conn = database.generate_connection(config)
     run_prepared_statements(conn, sql.export())
     yield conn
     conn.close()

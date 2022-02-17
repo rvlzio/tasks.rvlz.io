@@ -57,7 +57,9 @@ def create_user(conn: typing.Any) -> str:
     return username
 
 
-def one_user_task_exists(conn: typing.Any, username: str, task_id: str) -> bool:
+def one_user_task_exists(
+    conn: typing.Any, username: str, task_id: str
+) -> bool:
     with conn:
         with conn.cursor() as cursor:
             cursor.execute(

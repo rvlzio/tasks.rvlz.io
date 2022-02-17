@@ -16,7 +16,9 @@ class HMACTokenStore(TokenStore):
     def _has_valid_form(self, token_id: str) -> bool:
         components = token_id.split(".")
         return (
-            len(components) == 2 and components[0] != "" and components[1] != ""
+            len(components) == 2
+            and components[0] != ""
+            and components[1] != ""
         )
 
     def _is_valid_base64(self, s: str) -> bool:

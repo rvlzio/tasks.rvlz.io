@@ -1,11 +1,15 @@
 import pytest
 
 from infrastructure import token_store
+from config import initialize_config_factory
+
+config_factory = initialize_config_factory()
 
 
 @pytest.fixture(scope="module")
 def raw_test_conn():
-    conn = token_store.generate_test_connection()
+    config = config_factory.load(privileged=True)
+    conn = token_store.generate_connection(config)
     yield conn
 
 
@@ -17,5 +21,6 @@ def test_conn(raw_test_conn):
 
 @pytest.fixture(scope="module")
 def api_conn():
-    conn = token_store.generate_api_connection(test=True)
+    config = config_factory.load(test=True)
+    conn = token_store.generate_connection(config)
     yield conn
