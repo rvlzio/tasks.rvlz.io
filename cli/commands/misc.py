@@ -10,7 +10,7 @@ def cli():
 
 @cli.command("format")
 def format_code():
-    command = ["black", "--line-length", "80", "./cli", "./services/api/src"]
+    command = ["black", "--line-length", "79", "./cli", "./services/api/src"]
     process = subprocess.Popen(
         command,
         stdout=subprocess.PIPE,
