@@ -6,6 +6,7 @@ services:
       context: ./services/api
       dockerfile: Dockerfile
     environment:
+      SECRET_KEY: ${SECRET_KEY}
       DATABASE_USERNAME: ${DATABASE_API_USERNAME}
       DATABASE_PASSWORD: ${DATABASE_API_PASSWORD}
       DATABASE_TEST_USERNAME: ${DATABASE_ADMIN_USERNAME}
