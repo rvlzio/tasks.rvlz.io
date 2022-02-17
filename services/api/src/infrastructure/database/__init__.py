@@ -4,6 +4,8 @@ import typing
 import psycopg2
 
 from config import Config
+from infrastructure.database.prepared_statements import run_prepared_statements
+from infrastructure.database.prepared_statements import sql
 
 
 def generate_connection(config: Config) -> typing.Any:
@@ -18,3 +20,7 @@ def generate_connection(config: Config) -> typing.Any:
         port=5432,
         database=database,
     )
+
+
+def run_all_prepared_statements(conn: typing.Any):
+    run_prepared_statements(conn, sql.export())

@@ -1,7 +1,9 @@
 import typing
 
-from infrastructure.database.prepared_statements import PreparedStatement
-
+from infrastructure.database.prepared_statements import (
+    PreparedStatement,
+    run_prepared_statements,
+)
 
 prepared_statements = [
     PreparedStatement(
