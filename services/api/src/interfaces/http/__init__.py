@@ -1,8 +1,36 @@
-from flask import Flask
+from flask import Flask, g, request
+from interfaces.http import controllers
+from infrastructure import database, token_store
+from interfaces.http import config
 
 
 def create_app():
     app = Flask(__name__)
+    cfg = config.load()
+    database_connection = database.generate_connection(cfg)
+    token_store_connection = token_store.generate_connection(cfg)
+    database.run_all_prepared_statements(database_connection)
+
+    @app.before_request
+    def _check_content_type():
+        methods = ["POST", "PUT", "PATCH"]
+        content_type = request.headers.get("content-type", "")
+        if (
+            request.method in methods
+            and content_type.lower() != "application/json"
+        ):
+            payload = {
+                "code": "unsupported_media_type",
+                "message": "Only application/json accepted as content type",
+            }
+            return payload, 415
+
+    @app.before_request
+    def _set_database_connection():
+        g.database_conn = database_connection
+        g.token_store_conn = token_store_connection
+
+    app.register_blueprint(controllers.sessions, url_prefix="/v1/sessions")
 
     @app.route("/v1/health_check")
     def _health_check():
