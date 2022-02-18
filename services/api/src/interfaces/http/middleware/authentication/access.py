@@ -9,7 +9,7 @@ class Middleware:
         def _wrapper(*args, **kwargs):
             if "subject" not in g:
                 return {
-                    "code": "authentication_required",
+                    "code": "authentication_failure",
                     "message": "Authentication required to access endpoint.",
                 }, 401
             return func(*args, **kwargs)
