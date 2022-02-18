@@ -5,7 +5,7 @@ from interfaces.http.middleware import authentication
 from services.session import initialize_service
 
 
-def create_controller(config: Config):
+def create_controller(config: Config) -> Blueprint:
     app = Blueprint("sessions", __name__)
 
     @app.route("", methods=["POST"])
