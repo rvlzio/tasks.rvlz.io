@@ -111,7 +111,7 @@ jobs:
           -e TOKEN_STORE_TEST_NAME=$TOKEN_STORE_NAME
           app/api sh -c 'cd /src && python -m pytest'
       - name: Prepare database for end-to-end tests
-        run: source ./cli/scripts/prepare_database_for_e2e_tests.sh
+        run: source ./ci/scripts/prepare_database_for_e2e_tests.sh
       - name: Start API server for end-to-end tests
         run: >
           docker run -d --rm --network "host" --name api_instance
