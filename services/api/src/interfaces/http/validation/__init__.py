@@ -136,6 +136,22 @@ class Validator:
             )
         return username, password, Result(success=True)
 
+    def parse_bearer_auth_credentials(
+        self, header: Optional[str]
+    ) -> Tuple[str, Result]:
+        if header is None:
+            return "", Result(
+                success=False,
+                error_code=err.MISSING_AUTHORIZATION_HEADER,
+            )
+        if not header.startswith("Bearer "):
+            return "", Result(
+                success=False,
+                error_code=err.BAD_BEARER_AUTH_AUTHORIZATION_HEADER,
+            )
+        token = header.replace("Bearer ", "")
+        return token, Result(success=True)
+
     def find_error_response(self, result: Result) -> Tuple[Dict, int]:
         error_code = result.error_code
         if error_code == err.MISSING_AUTHORIZATION_HEADER:
@@ -148,6 +164,13 @@ class Validator:
                 "code": error_code.description,
                 "message": (
                     "Bad 'Authorization' header for basic authentication."
+                ),
+            }, 401
+        if error_code == err.BAD_BEARER_AUTH_AUTHORIZATION_HEADER:
+            return {
+                "code": error_code.description,
+                "message": (
+                    "Bad 'Authorization' header for token authentication."
                 ),
             }, 401
         if error_code == err.INVALID_FIELDS:
