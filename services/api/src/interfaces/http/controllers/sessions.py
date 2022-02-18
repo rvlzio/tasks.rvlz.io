@@ -6,9 +6,9 @@ from services.session import initialize_service
 
 
 def create_controller(config: Config) -> Blueprint:
-    app = Blueprint("sessions", __name__)
+    controller = Blueprint("sessions", __name__)
 
-    @app.route("", methods=["POST"])
+    @controller.route("", methods=["POST"])
     @authentication.basic_authentication
     @authentication.required
     def _log_in():
@@ -25,7 +25,7 @@ def create_controller(config: Config) -> Blueprint:
             }, 500
         return {"token": token}, 201
 
-    @app.route("", methods=["DELETE"])
+    @controller.route("", methods=["DELETE"])
     @authentication.token_authentication
     @authentication.required
     def _log_out():
@@ -43,4 +43,4 @@ def create_controller(config: Config) -> Blueprint:
             }, 500
         return "", 204
 
-    return app
+    return controller
