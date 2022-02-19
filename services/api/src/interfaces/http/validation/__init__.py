@@ -1,5 +1,6 @@
 import binascii
 import base64
+import json
 from typing import Optional, Dict, List, Tuple
 from dataclasses import dataclass
 
@@ -152,6 +153,74 @@ class Validator:
         token = header.replace("Bearer ", "")
         return token, Result(success=True)
 
+    def parse_task_input_body(
+        self, body: Optional[bytes]
+    ) -> Tuple[str, str, Result]:
+        if body is None or body == b"":
+            return (
+                "",
+                "",
+                Result(
+                    success=False,
+                    error_code=err.EMPTY_BODY,
+                ),
+            )
+        try:
+            payload = json.loads(body)
+        except:
+            return (
+                "",
+                "",
+                Result(
+                    success=False,
+                    error_code=err.INVALID_JSON,
+                ),
+            )
+        field_errors = []
+        if "subject" not in payload:
+            field_errors.append(
+                FieldError(
+                    name="subject",
+                    error_code=err.MISSING_FIELD,
+                )
+            )
+        else:
+            if type(payload["subject"]) != str:
+                field_errors.append(
+                    FieldError(
+                        name="subject",
+                        error_code=err.INVALID_DATA_TYPE,
+                        data={"type": "string"},
+                    )
+                )
+        if "description" not in payload:
+            field_errors.append(
+                FieldError(
+                    name="description",
+                    error_code=err.MISSING_FIELD,
+                )
+            )
+        else:
+            if type(payload["description"]) != str:
+                field_errors.append(
+                    FieldError(
+                        name="description",
+                        error_code=err.INVALID_DATA_TYPE,
+                        data={"type": "string"},
+                    )
+                )
+        if field_errors != []:
+            return (
+                "",
+                "",
+                Result(
+                    success=False,
+                    error_code=err.INVALID_FIELDS,
+                    field_errors=field_errors,
+                ),
+            )
+        return payload["subject"], payload["description"], Result(success=True)
+
     def find_error_response(self, result: Result) -> Tuple[Dict, int]:
         error_code = result.error_code
         if error_code == err.MISSING_AUTHORIZATION_HEADER:
@@ -173,6 +242,16 @@ class Validator:
                     "Bad 'Authorization' header for token authentication."
                 ),
             }, 401
+        if error_code == err.EMPTY_BODY:
+            return {
+                "code": error_code.description,
+                "message": "Empty body not allowed.",
+            }, 400
+        if error_code == err.INVALID_JSON:
+            return {
+                "code": error_code.description,
+                "message": "Invalid JSON in body.",
+            }, 422
         if error_code == err.INVALID_FIELDS:
             fields = {}
             for field_error in result.field_errors:
@@ -200,6 +279,13 @@ class Validator:
                         f"'{field_error.name}' must only "
                         "have ASCII characters."
                     )
+                elif field_error.error_code == err.MISSING_FIELD:
+                    field_payload["reason"] = "Missing."
+                elif field_error.error_code == INVALID_DATA_TYPE:
+                    data_type = field_error.data["type"]
+                    field_payload[
+                        "reason"
+                    ] = f"Only type {data_type}' allowed."
                 fields[field_error.name].append(field_payload)
             payload = {
                 "code": error_code.description,

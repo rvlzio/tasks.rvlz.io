@@ -31,6 +31,7 @@ def create_app():
         g.token_store_conn = token_store_connection
 
     app.register_blueprint(controllers.sessions(), url_prefix="/v1/sessions")
+    app.register_blueprint(controllers.tasks(), url_prefix="/v1/tasks")
 
     @app.route("/v1/health_check")
     def _health_check():
