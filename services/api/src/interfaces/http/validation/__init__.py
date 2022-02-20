@@ -153,7 +153,7 @@ class Validator:
         token = header.replace("Bearer ", "")
         return token, Result(success=True)
 
-    def parse_task_input_body(
+    def parse_task_creation_input_body(
         self, body: Optional[bytes]
     ) -> Tuple[str, str, Result]:
         if body is None or body == b"":
@@ -221,6 +221,99 @@ class Validator:
             )
         return payload["subject"], payload["description"], Result(success=True)
 
+    def parse_task_update_input_body(
+        self, body: Optional[bytes]
+    ) -> Tuple[str, str, str, Result]:
+        print(body)
+        if body is None or body == b"":
+            return (
+                "",
+                "",
+                False,
+                Result(
+                    success=False,
+                    error_code=err.EMPTY_BODY,
+                ),
+            )
+        try:
+            payload = json.loads(body)
+        except:
+            return (
+                "",
+                "",
+                False,
+                Result(
+                    success=False,
+                    error_code=err.INVALID_JSON,
+                ),
+            )
+        field_errors = []
+        if "subject" not in payload:
+            field_errors.append(
+                FieldError(
+                    name="subject",
+                    error_code=err.MISSING_FIELD,
+                )
+            )
+        else:
+            if type(payload["subject"]) != str:
+                field_errors.append(
+                    FieldError(
+                        name="subject",
+                        error_code=err.INVALID_DATA_TYPE,
+                        data={"type": "string"},
+                    )
+                )
+        if "description" not in payload:
+            field_errors.append(
+                FieldError(
+                    name="description",
+                    error_code=err.MISSING_FIELD,
+                )
+            )
+        else:
+            if type(payload["description"]) != str:
+                field_errors.append(
+                    FieldError(
+                        name="description",
+                        error_code=err.INVALID_DATA_TYPE,
+                        data={"type": "string"},
+                    )
+                )
+        if "completed" not in payload:
+            field_errors.append(
+                FieldError(
+                    name="completed",
+                    error_code=err.MISSING_FIELD,
+                )
+            )
+        else:
+            if type(payload["completed"]) != bool:
+                field_errors.append(
+                    FieldError(
+                        name="completed",
+                        error_code=err.INVALID_DATA_TYPE,
+                        data={"type": "boolean"},
+                    )
+                )
+        if field_errors != []:
+            return (
+                "",
+                "",
+                False,
+                Result(
+                    success=False,
+                    error_code=err.INVALID_FIELDS,
+                    field_errors=field_errors,
+                ),
+            )
+        return (
+            payload["subject"],
+            payload["description"],
+            payload["completed"],
+            Result(success=True),
+        )
+
     def find_error_response(self, result: Result) -> Tuple[Dict, int]:
         error_code = result.error_code
         if error_code == err.MISSING_AUTHORIZATION_HEADER:
@@ -281,7 +374,7 @@ class Validator:
                     )
                 elif field_error.error_code == err.MISSING_FIELD:
                     field_payload["reason"] = "Missing."
-                elif field_error.error_code == INVALID_DATA_TYPE:
+                elif field_error.error_code == err.INVALID_DATA_TYPE:
                     data_type = field_error.data["type"]
                     field_payload[
                         "reason"
