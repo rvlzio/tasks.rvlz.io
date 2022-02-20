@@ -519,8 +519,8 @@
 					"script": {
 						"exec": [
 							"// HTTP Status",
-							"pm.test(\"Request returns 201 HTTP Status\", function() {",
-							"    pm.response.to.have.status(201);",
+							"pm.test(\"Request returns 204 HTTP Status\", function() {",
+							"    pm.response.to.have.status(204);",
 							"});",
 							"",
 							"// HTTP Headers",
