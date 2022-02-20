@@ -260,7 +260,7 @@
 							"\r",
 							"// HTTP Response Body\r",
 							"pm.test(\"Task is uncompleted\", function() {\r",
-							"    task = pm.response.json();\r",
+							"    let task = pm.response.json();\r",
 							"    task_id = pm.environment.get(\"task_id\");\r",
 							"    pm.expect(task.id).to.eql(task_id);\r",
 							"    pm.expect(task.subject).to.eql(\"phone bill\");\r",
@@ -270,9 +270,9 @@
 							"\r",
 							"// Store task data\r",
 							"let task = pm.response.json();\r",
-							"delete token.id;\r",
+							"delete task.id;\r",
 							"let task_data = JSON.stringify(task);\r",
-							"pm.setEnvironmentVariable(\"task_data\", task_data);\r",
+							"pm.environment.set(\"task_data\", task_data);\r",
 							""
 						],
 						"type": "text/javascript"
