@@ -19,5 +19,5 @@ jobs:
         with:
           push: true
           context: services/api
-          file: Dockerfile.prod
+          file: services/api/Dockerfile.prod
           tags: rvlzio/api.tasks.rvlz.io/latest

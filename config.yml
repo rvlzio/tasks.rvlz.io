@@ -1,0 +1,88 @@
+database-conn:
+  username: api
+  password: password
+  host: database
+  name: api_dev
+
+token-store-conn:
+  username: api
+  password: password
+  host: token_store
+  name: 0
+
+sessions:
+  secret-key: secret_key
+  max-duration: 84600
+
+users:
+  username:
+    max: 30
+    min: 3
+  password:
+    max: 100
+    min: 8
+  email:
+    max: 150
+    min: 3
+
+tasks:
+  subject:
+    max: 500
+    min: 0
+  description:
+    max: 1000
+    min: 0
+
+---
+
+tests: true
+
+database-conn:
+  username: api
+  password: password
+  host: database
+  name: api_test
+
+tests-database-conn:
+  username: admin
+  password: password
+  host: database
+  name: api_test
+
+token-store-conn:
+  username: api
+  password: password
+  host: token_store
+  name: 0
+
+tests-token-store-conn:
+  username: default
+  password: password
+  host: token_store
+  name: 0
+
+sessions:
+  secret-key: secret_key
+  max-duration: 84600
+
+users:
+  username:
+    max: 30
+    min: 3
+    encoding: 'ascii'
+  password:
+    max: 100
+    min: 8
+    encoding: 'ascii'
+  email:
+    max: 150
+    min: 3
+    encoding: 'utf-8'
+
+tasks:
+  subject:
+    max: 500
+    min: 0
+  description:
+    max: 1000
+    min: 0
