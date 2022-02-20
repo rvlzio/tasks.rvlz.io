@@ -1,0 +1,17 @@
+FROM python:3.10.0-slim-buster
+ARG APP_USER=api
+RUN groupadd -r ${APP_USER} && useradd --no-log-init -r -g ${APP_USER} ${APP_USER}
+
+ENV PYTHONDONTWRITEBYTECODE=1
+
+COPY ./requirements /requirements
+RUN pip install --no-cache-dir -r /requirements/prod.txt
+RUN rm -rf /requirements
+
+RUN mkdir /src
+WORKDIR /src
+COPY ./src /src
+
+USER ${APP_USER}:${APP_USER}
+
+CMD ["gunicorn", "-c", "./infrastructure/gunicorn/__init__.py", "entrypoints.flask_api:app", "--bind", "0.0.0.0:80"]
