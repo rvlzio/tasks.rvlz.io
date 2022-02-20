@@ -58,12 +58,12 @@ class Controller:
             username = g.subject
             view = task_view.initialize_view(g.database_conn)
             task, result = view.current_user_task(username, task_id)
-            task["id"] = task_id
             if not result.success:
                 return {
                     "code": "task_not_found",
                     "message": "Task could not be found.",
                 }, 404
+            task["id"] = task_id
             return task, 200
 
         @controller.route("/<string:task_id>", methods=["PUT"])
@@ -97,5 +97,21 @@ class Controller:
             response.headers["Location"] = f"/v1/tasks/{task_id}"
             response.autocorrect_location_header = False
             return response
+
+        @controller.route("/<string:task_id>", methods=["DELETE"])
+        @authentication.token_authentication
+        @authentication.required
+        def _delete_task(task_id):
+            username = g.subject
+            service = task_service.initialize_service(g.database_conn)
+            result = service.delete_user_task(
+                username=username, task_id=task_id
+            )
+            if not result.success:
+                return {
+                    "code": "task_not_found",
+                    "message": "Task could not be found.",
+                }, 404
+            return "", 204
 
         return controller
