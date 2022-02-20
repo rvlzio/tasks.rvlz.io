@@ -132,7 +132,9 @@ jobs:
           -e TOKEN_STORE_TEST_NAME=$TOKEN_STORE_NAME
           -p 80:80
           app/api
-      - name: Run end-to-end tests
-        run: npx newman run ci/e2e/health_check.json
+      - name: Run health check e2e tests
+        run: npx newman run ci/e2e/health_check.json && npx newman run ci/e2e/create_and_completed_task.json
+      - name: Run task completion e2e tests
+        run: npx newman run ci/e2e/create_and_completed_task.json
       - name: Stop API server container
         run: docker stop api_instance
