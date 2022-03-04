@@ -1,0 +1,690 @@
+{
+	"info": {
+		"_postman_id": "68ccfc07-cccf-4a1c-bc91-df1d6cb8a879",
+		"name": "Get list of Tasks",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Sign In",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// HTTP Status",
+							"pm.test(\"Request returns 201 HTTP Status\", function() {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"// HTTP Headers",
+							"pm.test(\"Content-Type header is set\", function() {",
+							"    header = pm.response.headers.get(\"Content-Type\");",
+							"    pm.expect(header).to.eql(\"application/json;charset=utf-8\");",
+							"});",
+							"",
+							"pm.test(\"X-Content-Type-Options header is set\", function() {",
+							"    header = pm.response.headers.get(\"X-Content-Type-Options\");",
+							"    pm.expect(header).to.eql(\"nosniff\");",
+							"});",
+							"",
+							"pm.test(\"X-Frame-Options header is set\", function() {",
+							"    header = pm.response.headers.get(\"X-Frame-Options\");",
+							"    pm.expect(header).to.eql(\"DENY\");",
+							"});",
+							"",
+							"pm.test(\"X-XSS-Protection header is set\", function() {",
+							"    header = pm.response.headers.get(\"X-XSS-Protection\");",
+							"    pm.expect(header).to.eql(\"0\");",
+							"});",
+							"",
+							"pm.test(\"Cache-Control header is set\", function() {",
+							"    header = pm.response.headers.get(\"Cache-Control\");",
+							"    pm.expect(header).to.eql(\"no-store\");",
+							"});",
+							"",
+							"pm.test(\"Content-Security-Policy header is set\", function() {",
+							"    header = pm.response.headers.get(\"Content-Security-Policy\");",
+							"    pm.expect(header).to.eql(\"default-src 'none'; frame-ancestors 'none'; sandbox\");",
+							"});",
+							"",
+							"pm.test(\"Server header is empty\", function() {",
+							"    header = pm.response.headers.get(\"Server\");",
+							"    pm.expect(header).to.eql(\"\");",
+							"});",
+							"",
+							"// HTTP Body",
+							"pm.test(\"Response body has token\", function() {",
+							"    let credentials = pm.response.json()",
+							"    pm.expect(credentials).to.have.property(\"token\")",
+							"    pm.expect(credentials.token).to.not.eql(\"\")",
+							"});",
+							"",
+							"// Store token",
+							"let body = pm.response.json();",
+							"pm.environment.set(\"session_token\", body.token);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{USER_PASSWORD}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{USER_USERNAME}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{API_HOST}}/v1/sessions",
+					"host": [
+						"{{API_HOST}}"
+					],
+					"path": [
+						"v1",
+						"sessions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Task 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// HTTP Status",
+							"pm.test(\"Request returns 201 HTTP Status\", function() {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"// HTTP Headers",
+							"pm.test(\"Content-Type header is set\", function() {",
+							"    header = pm.response.headers.get(\"Content-Type\");",
+							"    pm.expect(header).to.eql(\"application/json;charset=utf-8\");",
+							"});",
+							"",
+							"pm.test(\"X-Content-Type-Options header is set\", function() {",
+							"    header = pm.response.headers.get(\"X-Content-Type-Options\");",
+							"    pm.expect(header).to.eql(\"nosniff\");",
+							"});",
+							"",
+							"pm.test(\"X-Frame-Options header is set\", function() {",
+							"    header = pm.response.headers.get(\"X-Frame-Options\");",
+							"    pm.expect(header).to.eql(\"DENY\");",
+							"});",
+							"",
+							"pm.test(\"X-XSS-Protection header is set\", function() {",
+							"    header = pm.response.headers.get(\"X-XSS-Protection\");",
+							"    pm.expect(header).to.eql(\"0\");",
+							"});",
+							"",
+							"pm.test(\"Cache-Control header is set\", function() {",
+							"    header = pm.response.headers.get(\"Cache-Control\");",
+							"    pm.expect(header).to.eql(\"no-store\");",
+							"});",
+							"",
+							"pm.test(\"Content-Security-Policy header is set\", function() {",
+							"    header = pm.response.headers.get(\"Content-Security-Policy\");",
+							"    pm.expect(header).to.eql(\"default-src 'none'; frame-ancestors 'none'; sandbox\");",
+							"});",
+							"",
+							"pm.test(\"Server header is empty\", function() {",
+							"    header = pm.response.headers.get(\"Server\");",
+							"    pm.expect(header).to.eql(\"\");",
+							"});",
+							"",
+							"pm.test(\"Location header is set to task resource\", function() {",
+							"    header = pm.response.headers.get(\"Location\");",
+							"    pm.expect(header.substr(0, 10)).to.eql(\"/v1/tasks/\");",
+							"});",
+							"",
+							"// Extract Task ID from Location header and store",
+							"location_header = pm.response.headers.get(\"Location\");",
+							"task_id = location_header.replace(\"/v1/tasks/\", \"\");",
+							"pm.environment.set(\"task_1_id\", task_id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{session_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"subject\": \"phone bill\",\n    \"description\": \"ask for extension\"\n}\n"
+				},
+				"url": {
+					"raw": "{{API_HOST}}/v1/tasks",
+					"host": [
+						"{{API_HOST}}"
+					],
+					"path": [
+						"v1",
+						"tasks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Task 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// HTTP Status",
+							"pm.test(\"Request returns 201 HTTP Status\", function() {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"// HTTP Headers",
+							"pm.test(\"Content-Type header is set\", function() {",
+							"    header = pm.response.headers.get(\"Content-Type\");",
+							"    pm.expect(header).to.eql(\"application/json;charset=utf-8\");",
+							"});",
+							"",
+							"pm.test(\"X-Content-Type-Options header is set\", function() {",
+							"    header = pm.response.headers.get(\"X-Content-Type-Options\");",
+							"    pm.expect(header).to.eql(\"nosniff\");",
+							"});",
+							"",
+							"pm.test(\"X-Frame-Options header is set\", function() {",
+							"    header = pm.response.headers.get(\"X-Frame-Options\");",
+							"    pm.expect(header).to.eql(\"DENY\");",
+							"});",
+							"",
+							"pm.test(\"X-XSS-Protection header is set\", function() {",
+							"    header = pm.response.headers.get(\"X-XSS-Protection\");",
+							"    pm.expect(header).to.eql(\"0\");",
+							"});",
+							"",
+							"pm.test(\"Cache-Control header is set\", function() {",
+							"    header = pm.response.headers.get(\"Cache-Control\");",
+							"    pm.expect(header).to.eql(\"no-store\");",
+							"});",
+							"",
+							"pm.test(\"Content-Security-Policy header is set\", function() {",
+							"    header = pm.response.headers.get(\"Content-Security-Policy\");",
+							"    pm.expect(header).to.eql(\"default-src 'none'; frame-ancestors 'none'; sandbox\");",
+							"});",
+							"",
+							"pm.test(\"Server header is empty\", function() {",
+							"    header = pm.response.headers.get(\"Server\");",
+							"    pm.expect(header).to.eql(\"\");",
+							"});",
+							"",
+							"pm.test(\"Location header is set to task resource\", function() {",
+							"    header = pm.response.headers.get(\"Location\");",
+							"    pm.expect(header.substr(0, 10)).to.eql(\"/v1/tasks/\");",
+							"});",
+							"",
+							"// Extract Task ID from Location header and store",
+							"location_header = pm.response.headers.get(\"Location\");",
+							"task_id = location_header.replace(\"/v1/tasks/\", \"\");",
+							"pm.environment.set(\"task_2_id\", task_id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{session_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"subject\": \"insurance bill\",\n    \"description\": \"pay on time!\"\n}\n"
+				},
+				"url": {
+					"raw": "{{API_HOST}}/v1/tasks",
+					"host": [
+						"{{API_HOST}}"
+					],
+					"path": [
+						"v1",
+						"tasks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Tasks",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// HTTP Status",
+							"pm.test(\"Request returns 200 HTTP Status\", function() {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// HTTP Headers",
+							"pm.test(\"Content-Type header is set\", function() {",
+							"    header = pm.response.headers.get(\"Content-Type\");",
+							"    pm.expect(header).to.eql(\"application/json;charset=utf-8\");",
+							"});",
+							"",
+							"pm.test(\"X-Content-Type-Options header is set\", function() {",
+							"    header = pm.response.headers.get(\"X-Content-Type-Options\");",
+							"    pm.expect(header).to.eql(\"nosniff\");",
+							"});",
+							"",
+							"pm.test(\"X-Frame-Options header is set\", function() {",
+							"    header = pm.response.headers.get(\"X-Frame-Options\");",
+							"    pm.expect(header).to.eql(\"DENY\");",
+							"});",
+							"",
+							"pm.test(\"X-XSS-Protection header is set\", function() {",
+							"    header = pm.response.headers.get(\"X-XSS-Protection\");",
+							"    pm.expect(header).to.eql(\"0\");",
+							"});",
+							"",
+							"pm.test(\"Cache-Control header is set\", function() {",
+							"    header = pm.response.headers.get(\"Cache-Control\");",
+							"    pm.expect(header).to.eql(\"no-store\");",
+							"});",
+							"",
+							"pm.test(\"Content-Security-Policy header is set\", function() {",
+							"    header = pm.response.headers.get(\"Content-Security-Policy\");",
+							"    pm.expect(header).to.eql(\"default-src 'none'; frame-ancestors 'none'; sandbox\");",
+							"});",
+							"",
+							"pm.test(\"Server header is empty\", function() {",
+							"    header = pm.response.headers.get(\"Server\");",
+							"    pm.expect(header).to.eql(\"\");",
+							"});",
+							"",
+							"// HTTP Response Body",
+							"pm.test(\"Response includes last two created tasks\", function() {",
+							"    let tasks = pm.response.json();",
+							"    let task_1_id = pm.environment.get(\"task_1_id\");",
+							"    let task_2_id = pm.environment.get(\"task_2_id\");",
+							"    pm.expect(tasks[0].id).to.eql(task_2_id);",
+							"    pm.expect(tasks[0].subject).to.eql(\"insurance bill\");",
+							"    pm.expect(tasks[0].description).to.eql(\"pay on time!\");",
+							"    pm.expect(tasks[0].completed).to.be.false;",
+							"    pm.expect(tasks[1].id).to.eql(task_1_id);",
+							"    pm.expect(tasks[1].subject).to.eql(\"phone bill\");",
+							"    pm.expect(tasks[1].description).to.eql(\"ask for extension\");",
+							"    pm.expect(tasks[1].completed).to.be.false;",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{session_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_HOST}}/v1/tasks",
+					"host": [
+						"{{API_HOST}}"
+					],
+					"path": [
+						"v1",
+						"tasks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Task 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// HTTP Status",
+							"pm.test(\"Request returns 204 HTTP Status\", function() {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							"",
+							"// HTTP Headers",
+							"pm.test(\"Content-Type header is set\", function() {",
+							"    header = pm.response.headers.get(\"Content-Type\");",
+							"    pm.expect(header).to.eql(\"application/json;charset=utf-8\");",
+							"});",
+							"",
+							"pm.test(\"X-Content-Type-Options header is set\", function() {",
+							"    header = pm.response.headers.get(\"X-Content-Type-Options\");",
+							"    pm.expect(header).to.eql(\"nosniff\");",
+							"});",
+							"",
+							"pm.test(\"X-Frame-Options header is set\", function() {",
+							"    header = pm.response.headers.get(\"X-Frame-Options\");",
+							"    pm.expect(header).to.eql(\"DENY\");",
+							"});",
+							"",
+							"pm.test(\"X-XSS-Protection header is set\", function() {",
+							"    header = pm.response.headers.get(\"X-XSS-Protection\");",
+							"    pm.expect(header).to.eql(\"0\");",
+							"});",
+							"",
+							"pm.test(\"Cache-Control header is set\", function() {",
+							"    header = pm.response.headers.get(\"Cache-Control\");",
+							"    pm.expect(header).to.eql(\"no-store\");",
+							"});",
+							"",
+							"pm.test(\"Content-Security-Policy header is set\", function() {",
+							"    header = pm.response.headers.get(\"Content-Security-Policy\");",
+							"    pm.expect(header).to.eql(\"default-src 'none'; frame-ancestors 'none'; sandbox\");",
+							"});",
+							"",
+							"pm.test(\"Server header is empty\", function() {",
+							"    header = pm.response.headers.get(\"Server\");",
+							"    pm.expect(header).to.eql(\"\");",
+							"});",
+							"",
+							"// HTTP Response Body",
+							"pm.test(\"Response body is empty\", function() {",
+							"    body = pm.response.text();",
+							"    pm.expect(body).to.eql(\"\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{session_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{API_HOST}}/v1/tasks/{{task_1_id}}",
+					"host": [
+						"{{API_HOST}}"
+					],
+					"path": [
+						"v1",
+						"tasks",
+						"{{task_1_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Task 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// HTTP Status",
+							"pm.test(\"Request returns 204 HTTP Status\", function() {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							"",
+							"// HTTP Headers",
+							"pm.test(\"Content-Type header is set\", function() {",
+							"    header = pm.response.headers.get(\"Content-Type\");",
+							"    pm.expect(header).to.eql(\"application/json;charset=utf-8\");",
+							"});",
+							"",
+							"pm.test(\"X-Content-Type-Options header is set\", function() {",
+							"    header = pm.response.headers.get(\"X-Content-Type-Options\");",
+							"    pm.expect(header).to.eql(\"nosniff\");",
+							"});",
+							"",
+							"pm.test(\"X-Frame-Options header is set\", function() {",
+							"    header = pm.response.headers.get(\"X-Frame-Options\");",
+							"    pm.expect(header).to.eql(\"DENY\");",
+							"});",
+							"",
+							"pm.test(\"X-XSS-Protection header is set\", function() {",
+							"    header = pm.response.headers.get(\"X-XSS-Protection\");",
+							"    pm.expect(header).to.eql(\"0\");",
+							"});",
+							"",
+							"pm.test(\"Cache-Control header is set\", function() {",
+							"    header = pm.response.headers.get(\"Cache-Control\");",
+							"    pm.expect(header).to.eql(\"no-store\");",
+							"});",
+							"",
+							"pm.test(\"Content-Security-Policy header is set\", function() {",
+							"    header = pm.response.headers.get(\"Content-Security-Policy\");",
+							"    pm.expect(header).to.eql(\"default-src 'none'; frame-ancestors 'none'; sandbox\");",
+							"});",
+							"",
+							"pm.test(\"Server header is empty\", function() {",
+							"    header = pm.response.headers.get(\"Server\");",
+							"    pm.expect(header).to.eql(\"\");",
+							"});",
+							"",
+							"// HTTP Response Body",
+							"pm.test(\"Response body is empty\", function() {",
+							"    body = pm.response.text();",
+							"    pm.expect(body).to.eql(\"\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{session_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{API_HOST}}/v1/tasks/{{task_2_id}}",
+					"host": [
+						"{{API_HOST}}"
+					],
+					"path": [
+						"v1",
+						"tasks",
+						"{{task_2_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Sign Out",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// HTTP Status",
+							"pm.test(\"Request returns 204 HTTP Status\", function() {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							"",
+							"// HTTP Headers",
+							"pm.test(\"Content-Type header is set\", function() {",
+							"    header = pm.response.headers.get(\"Content-Type\");",
+							"    pm.expect(header).to.eql(\"application/json;charset=utf-8\");",
+							"});",
+							"",
+							"pm.test(\"X-Content-Type-Options header is set\", function() {",
+							"    header = pm.response.headers.get(\"X-Content-Type-Options\");",
+							"    pm.expect(header).to.eql(\"nosniff\");",
+							"});",
+							"",
+							"pm.test(\"X-Frame-Options header is set\", function() {",
+							"    header = pm.response.headers.get(\"X-Frame-Options\");",
+							"    pm.expect(header).to.eql(\"DENY\");",
+							"});",
+							"",
+							"pm.test(\"X-XSS-Protection header is set\", function() {",
+							"    header = pm.response.headers.get(\"X-XSS-Protection\");",
+							"    pm.expect(header).to.eql(\"0\");",
+							"});",
+							"",
+							"pm.test(\"Cache-Control header is set\", function() {",
+							"    header = pm.response.headers.get(\"Cache-Control\");",
+							"    pm.expect(header).to.eql(\"no-store\");",
+							"});",
+							"",
+							"pm.test(\"Content-Security-Policy header is set\", function() {",
+							"    header = pm.response.headers.get(\"Content-Security-Policy\");",
+							"    pm.expect(header).to.eql(\"default-src 'none'; frame-ancestors 'none'; sandbox\");",
+							"});",
+							"",
+							"pm.test(\"Server header is empty\", function() {",
+							"    header = pm.response.headers.get(\"Server\");",
+							"    pm.expect(header).to.eql(\"\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{session_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{API_HOST}}/v1/sessions",
+					"host": [
+						"{{API_HOST}}"
+					],
+					"path": [
+						"v1",
+						"sessions"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "API_HOST",
+			"value": "localhost",
+			"type": "string"
+		},
+		{
+			"key": "USER_USERNAME",
+			"value": "user",
+			"type": "string"
+		},
+		{
+			"key": "USER_PASSWORD",
+			"value": "password",
+			"type": "string"
+		}
+	]
+}

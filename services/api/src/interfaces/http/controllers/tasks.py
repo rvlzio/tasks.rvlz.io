@@ -1,3 +1,4 @@
+import json
 from typing import Any, Tuple, Dict
 
 from flask import Blueprint, g, request, make_response
@@ -113,5 +114,20 @@ class Controller:
                     "message": "Task could not be found.",
                 }, 404
             return "", 204
+
+        @controller.route("", methods=["GET"])
+        @authentication.token_authentication
+        @authentication.required
+        def _get_tasks():
+            username = g.subject
+            view = task_view.initialize_view(g.database_conn)
+            tasks, result = view.recent_user_tasks(username)
+            if not result.success:
+                return {
+                    "code": "internal_server_error",
+                    "message": "internal server error.",
+                }, 500
+            response = make_response(json.dumps(tasks), 201)
+            return response, 200
 
         return controller
