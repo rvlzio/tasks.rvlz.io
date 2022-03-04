@@ -139,5 +139,7 @@ jobs:
         run: npx newman run ci/e2e/health_check.json && npx newman run ci/e2e/create_and_completed_task.json
       - name: Run task completion e2e tests
         run: npx newman run ci/e2e/create_and_completed_task.json
+      - name: Run recent tasks retrieval e2e tests
+        run: npx newman run ci/e2e/get_list_of_tasks.json
       - name: Stop API server container
         run: docker stop api_instance
