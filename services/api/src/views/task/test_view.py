@@ -81,3 +81,36 @@ def test_missing_current_user_task(api_conn, test_conn):
     assert not result.success
     assert result.error_code == results.NONEXISTENT_TASK_ERR
     assert task is None
+
+
+def test_get_recent_user_tasks(api_conn, test_conn):
+    username = create_user(test_conn)
+    service = initialize_service(conn=api_conn)
+    task_1_id, _ = service.create_user_task(
+        username=username,
+        subject="Pay phone bill",
+        description="Ask for extension",
+    )
+    task_2_id, _ = service.create_user_task(
+        username=username,
+        subject="Pay insurance bill",
+        description="Pay on time!",
+    )
+    sut = initialize_view(conn=api_conn)
+
+    tasks, result = sut.recent_user_tasks(username)
+
+    assert result.success
+    assert result.error_code is None
+    assert tasks[0] == {
+        "id": task_2_id,
+        "subject": "Pay insurance bill",
+        "description": "Pay on time!",
+        "completed": False,
+    }
+    assert tasks[1] == {
+        "id": task_1_id,
+        "subject": "Pay phone bill",
+        "description": "Ask for extension",
+        "completed": False,
+    }

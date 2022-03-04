@@ -118,6 +118,17 @@ prepared_statements = [
         """,
         args=1,
     ),
+    PreparedStatement(
+        name="get_recent_user_tasks",
+        statement="""
+        SELECT t.identifier, t.subject, t.description, t.completed
+        FROM api.tasks t LEFT JOIN api.users u
+        ON t._user_pk = u._pk
+        WHERE u.username = $1
+        ORDER BY t.created_at DESC;
+        """,
+        args=1,
+    ),
 ]
 
 

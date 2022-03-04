@@ -1,0 +1,5 @@
+BEGIN;
+
+ALTER TABLE api.tasks ADD COLUMN created_at TIMESTAMP DEFAULT NOW();
+
+END;
