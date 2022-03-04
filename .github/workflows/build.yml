@@ -2,7 +2,7 @@ name: Build and Push Docker Images
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - 'v*.*'
 jobs:
   main:
     runs-on: ubuntu-latest
