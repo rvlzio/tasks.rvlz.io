@@ -114,3 +114,42 @@ def test_get_recent_user_tasks(api_conn, test_conn):
         "description": "Ask for extension",
         "completed": False,
     }
+
+
+def test_get_recent_user_tasks_limit(api_conn, test_conn):
+    username = create_user(test_conn)
+    service = initialize_service(conn=api_conn)
+    task_1_id, _ = service.create_user_task(
+        username=username,
+        subject="Pay phone bill",
+        description="Ask for extension",
+    )
+    task_2_id, _ = service.create_user_task(
+        username=username,
+        subject="Pay insurance bill",
+        description="Pay on time!",
+    )
+    task_3_id, _ = service.create_user_task(
+        username=username,
+        subject="Walk the dog",
+        description="Don't forget the treats",
+    )
+    sut = initialize_view(conn=api_conn, task_limit=2)
+
+    tasks, result = sut.recent_user_tasks(username)
+
+    assert result.success
+    assert result.error_code is None
+    assert len(tasks) == 2
+    assert tasks[0] == {
+        "id": task_3_id,
+        "subject": "Walk the dog",
+        "description": "Don't forget the treats",
+        "completed": False,
+    }
+    assert tasks[1] == {
+        "id": task_2_id,
+        "subject": "Pay insurance bill",
+        "description": "Pay on time!",
+        "completed": False,
+    }

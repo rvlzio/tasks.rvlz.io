@@ -125,9 +125,10 @@ prepared_statements = [
         FROM api.tasks t LEFT JOIN api.users u
         ON t._user_pk = u._pk
         WHERE u.username = $1
-        ORDER BY t.created_at DESC;
+        ORDER BY t.created_at DESC
+        LIMIT $2;
         """,
-        args=1,
+        args=2,
     ),
 ]
 

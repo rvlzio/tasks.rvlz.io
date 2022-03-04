@@ -5,8 +5,9 @@ from application import results
 
 
 class TaskView(View):
-    def __init__(self, conn: Any):
+    def __init__(self, conn: Any, task_limit: int):
         self.conn = conn
+        self.task_limit = task_limit
         super().__init__()
 
     def current_task(
@@ -68,7 +69,7 @@ class TaskView(View):
                 )
                 cursor.execute(
                     prepared_statement.execution_statement(),
-                    (username,),
+                    (username, self.task_limit),
                 )
                 tasks = []
                 row = cursor.fetchone()
@@ -86,5 +87,5 @@ class TaskView(View):
         return tasks, results.Result(success=True)
 
 
-def initialize_view(conn: Any) -> TaskView:
-    return TaskView(conn=conn)
+def initialize_view(conn: Any, task_limit: int = 100) -> TaskView:
+    return TaskView(conn=conn, task_limit=task_limit)
